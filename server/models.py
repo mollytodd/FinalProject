@@ -45,6 +45,13 @@ class Lead(db.Model, SerializerMixin):
     def lead_stage_name(self):
         return self.stage.name if self.stage else None
 
+    @hybrid_property
+    def lead_type_name(self):
+        if self.lead_types:
+            return [type.name for type in self.lead_types]
+        else:
+            return None
+
     serialize_rules = (
         "-stage",
         "-lead_types",
