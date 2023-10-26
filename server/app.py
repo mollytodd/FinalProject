@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 # Standard library imports
-
+from flask_migrate import Migrate
 # Remote library imports
 from flask import request
 from flask_restful import Resource
 
 # Local imports
-from config import app, db, api
+from config import app, db, api, CORS, bcrypt, migrate
 # Add your model imports
 
 
