@@ -125,6 +125,80 @@ class LeadById(Resource):
     
 api.add_resource(LeadById, "/leads/<int:lead_id>")
 
+class AddLead(Resource):
+    def post(self):
+        data = request.get_json()
+        # Create a new lead
+        new_lead = Lead(
+            name=data["lead_name"],  # Use "lead_name" instead of "name"
+            email=data["email"],
+            phone_number=data["phone_number"],
+            notes=data["notes"],
+        )
+
+        # Find the stage by name
+        stage_name = data.get("stage_name")
+        if stage_name:
+            stage = Stage.query.filter_by(name=stage_name).first()
+            if stage:
+                new_lead.stage = stage
+
+        # Find the types by name
+        type_names = data.get("type_names", [])
+        for type_name in type_names:
+            lead_type = Type.query.filter_by(name=type_name).first()
+            if lead_type:
+                new_lead.lead_types.append(lead_type)
+
+        db.session.add(new_lead)
+        db.session.commit()
+
+        return {"message": "Lead added successfully"}, 201
+
+api.add_resource(AddLead, "/leads")
+
+class EditLead(Resource):
+    def patch(self, lead_id):
+        data = request.get_json()
+        lead = Lead.query.get(lead_id)
+
+        if lead is None:
+            return {"error": "Lead not found"}, 404
+
+        # Update lead information
+        if "lead_name" in data:  # Use "lead_name" instead of "name"
+            lead.name = data["lead_name"]
+        if "email" in data:
+            lead.email = data["email"]
+        if "phone_number" in data:
+            lead.phone_number = data["phone_number"]
+        if "notes" in data:
+            lead.notes = data["notes"]
+
+        # Find the stage by name and update it
+        stage_name = data.get("stage_name")
+        if stage_name:
+            stage = Stage.query.filter_by(name=stage_name).first()
+            if stage:
+                lead.stage = stage
+            else:
+                return {"error": "Stage not found"}, 404
+
+        # Find the types by name and update them
+        type_names = data.get("type_names", [])
+        lead.lead_types.clear()
+        for type_name in type_names:
+            lead_type = Type.query.filter_by(name=type_name).first()
+            if lead_type:
+                lead.lead_types.append(lead_type)
+
+        db.session.commit()
+
+        return {"message": "Lead updated successfully"}, 200
+
+api.add_resource(EditLead, "/leads/<int:lead_id>")
+
+
 class LeadsByType(Resource):
     def get(self, type_id):
         # Retrieve the type by its ID
