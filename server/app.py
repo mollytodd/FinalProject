@@ -102,6 +102,105 @@ class Leads(Resource):
 
 api.add_resource(Leads, "/leads")
 
+class LeadById(Resource):
+    def get(self, lead_id):
+        # Retrieve the lead by its ID
+        lead = Lead.query.get(lead_id)
+
+        if lead is None:
+            return {"error": "Lead not found"}, 404
+
+        # Format the lead data
+        formatted_lead = {
+            "lead_id": lead.id,
+            "lead_name": lead.name,
+            "email": lead.email,
+            "phone_number": lead.phone_number,
+            "notes": lead.notes,
+            "lead_type": lead.lead_type_name,
+            "stage": lead.lead_stage_name,
+        }
+
+        return make_response(formatted_lead, 200)
+    
+api.add_resource(LeadById, "/leads/<int:lead_id>")
+
+class LeadsByType(Resource):
+    def get(self, type_id):
+        # Retrieve the type by its ID
+        lead_type = Type.query.get(type_id)
+
+        if lead_type is None:
+            return {"error": "Type not found"}, 404
+
+        # Get the leads associated with the type
+        leads = lead_type.associated_leads
+
+        formatted_leads = [
+            {
+                "lead_id": lead.id,
+                "lead_name": lead.name,
+                "email": lead.email,
+                "phone_number": lead.phone_number,
+                "notes": lead.notes,
+                "lead_type": lead.lead_type_name,
+                "stage": lead.lead_stage_name,
+            }
+            for lead in leads
+        ]
+
+        return make_response(formatted_leads, 200)
+
+api.add_resource(LeadsByType, "/leads/type/<int:type_id>")
+
+class LeadsByStage(Resource):
+    def get(self, stage_id):
+        # Retrieve the stage by its ID
+        lead_stage = Stage.query.get(stage_id)
+
+        if lead_stage is None:
+            return {"error": "Stage not found"}, 404
+
+        # Get the leads associated with the stage
+        leads = lead_stage.associated_leads
+
+        formatted_leads = [
+            {
+                "lead_id": lead.id,
+                "lead_name": lead.name,
+                "email": lead.email,
+                "phone_number": lead.phone_number,
+                "notes": lead.notes,
+                "lead_type": lead.lead_type_name,
+                "stage": lead.lead_stage_name,
+            }
+            for lead in leads
+        ]
+
+        return make_response(formatted_leads, 200)
+
+api.add_resource(LeadsByStage, "/leads/stage/<int:stage_id>")
+
+
+class Users(Resource):
+    def get(self):
+        users = [
+            user.to_dict(
+                rules=(
+                  
+                    "-leads",
+                    "-stages",
+                    "-types",
+                )
+            )
+            for user in User.query.all()
+        ]
+        return make_response(users, 200)
+
+
+api.add_resource(Users, "/users")
+
+
 @app.route('/')
 def index():
     return '<h1>Project Server</h1>'
