@@ -255,6 +255,20 @@ class LeadsByStage(Resource):
 
 api.add_resource(LeadsByStage, "/leads/stage/<int:stage_id>")
 
+class DeleteLead(Resource):
+    def delete(self, lead_id):
+        lead = Lead.query.get(lead_id)
+
+        if lead is None:
+            return {"error": "Lead not found"}, 404
+
+        db.session.delete(lead)
+        db.session.commit()
+
+        return {"message": "Lead deleted successfully"}, 200
+
+api.add_resource(DeleteLead, "/leads/<int:lead_id>")
+
 
 class Users(Resource):
     def get(self):
