@@ -25,7 +25,7 @@ function Login({ setUser }) {
           // If the login is successful, set the user state and redirect to the home page
           response.json().then((user) => {
             setUser(user);
-            history.push("/");
+            history.push("/home");
           });
         } else {
           // If the login fails, handle the error

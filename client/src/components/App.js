@@ -4,6 +4,7 @@ import { Route, Switch, BrowserRouter as Router, Redirect } from "react-router-d
 import { ChakraProvider } from "@chakra-ui/react";
 // import MyProvider from "./MyProvider"; // Check the path
 import Login from "./Login"; // Check the path
+import Home from "./Home";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -25,9 +26,10 @@ function App() {
           <Route path="/login">
             <Login user={user} setUser={setUser} fetchUser={fetchUser} />
           </Route>
-          <Route exact path="/"> {/* Exact path for the root URL */}
-            <Redirect to="/login" /> {/* Redirect to the login page */}
+          <Route path="/home">
+            <Home setUser={setUser} />
           </Route>
+          <Redirect from="/" to="/login" />
         </Switch>
       </Router>
     </ChakraProvider>
@@ -35,7 +37,6 @@ function App() {
 }
 
 export default App;
-
 
 
 
