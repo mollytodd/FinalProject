@@ -1,9 +1,19 @@
 import React from "react";
-import { Button, Heading, Flex, Box } from "@chakra-ui/react";
+import { Button, Heading, Flex, Box, SimpleGrid } from "@chakra-ui/react";
 import Logout from "./Logout";
 import PieChart from "./PieChart";
+import Sidebar from "./Sidebar";
+import BarChart from "./BarChart";
+import SummaryBoxes from "./SummaryBoxes";
 
-function Home({ setUser, leadData, setLeadData }) {
+function Home({
+  setUser,
+  leadData,
+  setLeadDatatotalLeads,
+  totalWonLeads,
+  totalLostLeads,
+  totalLeads,
+}) {
   return (
     <Flex flexDirection="column" alignItems="center" p={4}>
       <Button
@@ -25,11 +35,22 @@ function Home({ setUser, leadData, setLeadData }) {
       </Button>
       <Box mt={8} textAlign="center">
         <Heading as="h2" size="xl">
-          Welcome to Your Lead Dashboard
+          Your Lead Dashboard
         </Heading>
       </Box>
       <Box mt={8}>
-        <PieChart />
+        <SimpleGrid spacing={10}>
+          <SummaryBoxes
+            totalLeads={totalLeads}
+            totalWonLeads={totalWonLeads}
+            totalLostLeads={totalLostLeads}
+          />
+          <div style={{ display: "flex" }}>
+            <PieChart />
+            <BarChart />
+          </div>
+        </SimpleGrid>
+        <Sidebar />
       </Box>
     </Flex>
   );

@@ -1,14 +1,48 @@
-
-import React, { useState } from "react";
-import { Route, Switch, BrowserRouter as Router, Redirect } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import {
+  Route,
+  Switch,
+  BrowserRouter as Router,
+  Redirect,
+} from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
-// import MyProvider from "./MyProvider"; // Check the path
-import Login from "./Login"; // Check the path
+import Login from "./Login";
 import Home from "./Home";
+import Sidebar from "./Sidebar";
 
 function App() {
   const [user, setUser] = useState(null);
-  // const [refreshPage, setRefreshPage] = useState(false);
+  const [totalLeads, setTotalLeads] = useState(0);
+  const [totalWonLeads, setTotalWonLeads] = useState(0);
+  const [totalLostLeads, setTotalLostLeads] = useState(0);
+
+  useEffect(() => {
+    // Fetch your lead data and calculate the values
+    fetch("http://localhost:5555/leads")
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw Error("Network response was not ok");
+        }
+      })
+      .then((data) => {
+        const totalLeads = data.length;
+        const totalWonLeads = data.filter(
+          (lead) => lead.stage === "Won"
+        ).length;
+        const totalLostLeads = data.filter(
+          (lead) => lead.stage === "Lost"
+        ).length;
+
+        setTotalLeads(totalLeads);
+        setTotalWonLeads(totalWonLeads);
+        setTotalLostLeads(totalLostLeads);
+      })
+      .catch((error) => {
+        console.error("Error fetching lead data:", error);
+      });
+  }, []);
 
   const fetchUser = () =>
     fetch("http://localhost:5555/check_session").then((r) => {
@@ -19,6 +53,7 @@ function App() {
         });
       }
     });
+
   return (
     <ChakraProvider>
       <Router>
@@ -27,7 +62,12 @@ function App() {
             <Login user={user} setUser={setUser} fetchUser={fetchUser} />
           </Route>
           <Route path="/home">
-            <Home setUser={setUser} />
+            <Home
+              setUser={setUser}
+              totalLeads={totalLeads}
+              totalWonLeads={totalWonLeads}
+              totalLostLeads={totalLostLeads}
+            />
           </Route>
           <Redirect from="/" to="/login" />
         </Switch>
@@ -37,6 +77,3 @@ function App() {
 }
 
 export default App;
-
-
-
