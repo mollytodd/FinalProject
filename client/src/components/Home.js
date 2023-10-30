@@ -5,15 +5,17 @@ import PieChart from "./PieChart";
 import Sidebar from "./Sidebar";
 import BarChart from "./BarChart";
 import SummaryBoxes from "./SummaryBoxes";
+import { useAuth } from "./AuthContext"; 
 
 function Home({
-  setUser,
+
   leadData,
   setLeadDatatotalLeads,
   totalWonLeads,
   totalLostLeads,
   totalLeads,
 }) {
+  const { setUser } = useAuth(); // Access setUser method
   return (
     <Flex flexDirection="column" alignItems="center" p={4}>
       <Button

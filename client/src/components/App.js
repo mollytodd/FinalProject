@@ -8,7 +8,10 @@ import {
 import { ChakraProvider } from "@chakra-ui/react";
 import Login from "./Login";
 import Home from "./Home";
-import Sidebar from "./Sidebar";
+// import Sidebar from "./Sidebar";
+import { AuthProvider } from "./AuthContext";
+import LeadsTable from "./LeadsTable";
+
 
 function App() {
   const [user, setUser] = useState(null);
@@ -55,24 +58,30 @@ function App() {
     });
 
   return (
-    <ChakraProvider>
-      <Router>
-        <Switch>
-          <Route path="/login">
-            <Login user={user} setUser={setUser} fetchUser={fetchUser} />
-          </Route>
-          <Route path="/home">
-            <Home
-              setUser={setUser}
-              totalLeads={totalLeads}
-              totalWonLeads={totalWonLeads}
-              totalLostLeads={totalLostLeads}
-            />
-          </Route>
-          <Redirect from="/" to="/login" />
-        </Switch>
-      </Router>
-    </ChakraProvider>
+    <AuthProvider>
+      <ChakraProvider>
+        <Router>
+          <Switch>
+            <Route path="/login">
+              <Login user={user} setUser={setUser} fetchUser={fetchUser} />
+            </Route>
+
+            <Route path="/home">
+              <Home
+                setUser={setUser}
+                totalLeads={totalLeads}
+                totalWonLeads={totalWonLeads}
+                totalLostLeads={totalLostLeads}
+              />
+            </Route>
+            <Route path="/leads">
+              <LeadsTable />
+            </Route>
+            <Redirect from="/" to="/login" />
+          </Switch>
+        </Router>
+      </ChakraProvider>
+    </AuthProvider>
   );
 }
 

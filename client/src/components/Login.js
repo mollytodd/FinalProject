@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Box, Input, Button, Heading, Text } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
+import { useAuth } from "./AuthContext"; // Import the useAuth hook
 
-function Login({ setUser }) {
+function Login() {
+  const { setUser } = useAuth(); // Access the setUser method
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -22,7 +25,7 @@ function Login({ setUser }) {
     })
       .then((response) => {
         if (response.ok) {
-          // If the login is successful, set the user state and redirect to the home page
+          // If the login is successful, set the user state using the setUser method from the context
           response.json().then((user) => {
             setUser(user);
             history.push("/home");

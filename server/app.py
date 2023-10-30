@@ -199,8 +199,27 @@ class EditLead(Resource):
 api.add_resource(EditLead, "/leads/<int:lead_id>")
 
 
+type_name_to_id = {
+    "Google": 1,
+    "Yelp": 2,
+    "Referral": 3,
+    "Instagram": 4,
+    "Facebook": 5,
+    "Cold Call": 6,
+    "TikTok": 7,
+    "Flyer": 8,
+    "Walk By": 9,
+    "Other": 10,
+}
+
 class LeadsByType(Resource):
-    def get(self, type_id):
+    def get(self, lead_type_name):
+        # Look up the type_id based on the lead type name
+        type_id = type_name_to_id.get(lead_type_name)
+
+        if type_id is None:
+            return {"error": "Type not found"}, 404
+
         # Retrieve the type by its ID
         lead_type = Type.query.get(type_id)
 
@@ -225,7 +244,7 @@ class LeadsByType(Resource):
 
         return make_response(formatted_leads, 200)
 
-api.add_resource(LeadsByType, "/leads/type/<int:type_id>")
+api.add_resource(LeadsByType, "/leads/type/<string:lead_type_name>")
 
 class LeadsByStage(Resource):
     def get(self, stage_id):

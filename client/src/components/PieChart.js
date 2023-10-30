@@ -18,6 +18,46 @@ const PieChart = () => {
     return uniqueColors;
   };
 
+  // Function to handle click events on the chart
+ const handleChartClick = (event) => {
+  if (chartInstanceRef.current) {
+    const chart = chartInstanceRef.current;
+    const elements = chart.getElementsAtEventForMode(event, 'point', chart.options);
+    
+    if (elements.length > 0) {
+      // Get the index of the clicked element
+      const index = elements[0].index;
+      if (index >= 0 && index < leadTypes.length) {
+        const leadTypeClicked = leadTypes[index];
+        // Construct the API URL for fetching leads by type
+        const apiUrl = `http://localhost:5555/leads/type/${leadTypeClicked}`;
+        
+        // Fetch leads by type and display them
+        fetch(apiUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // Handle the response and display the leads associated with the clicked lead type
+            console.log(`Leads of type ${leadTypeClicked}:`, data);
+          })
+          .catch((error) => {
+            console.error("Error fetching lead data:", error);
+          });
+      }
+    }
+  }
+};
+
+
+
+
+
+
+
   useEffect(() => {
     fetch("http://localhost:5555/leads")
       .then((response) => {
@@ -63,7 +103,7 @@ const PieChart = () => {
       const uniqueColors = generateUniqueColors(leadTypes.length);
 
       chartInstanceRef.current = new Chart(chartRef.current, {
-        type: 'pie',
+        type: "pie",
         data: {
           labels: leadTypes.map(
             (leadType, index) => `${leadType} (${percentages[index]}%)`
@@ -78,6 +118,7 @@ const PieChart = () => {
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          onClick: handleChartClick, // Handle click events
         },
       });
     }
