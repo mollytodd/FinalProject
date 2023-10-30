@@ -63,7 +63,7 @@ const PieChart = () => {
       const uniqueColors = generateUniqueColors(leadTypes.length);
 
       chartInstanceRef.current = new Chart(chartRef.current, {
-        type: "pie",
+        type: 'pie',
         data: {
           labels: leadTypes.map(
             (leadType, index) => `${leadType} (${percentages[index]}%)`
