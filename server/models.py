@@ -38,7 +38,11 @@ class Lead(db.Model, SerializerMixin):
     lead_types = db.relationship(
         'Type',
         secondary=lead_type_lead_association,
-        backref='associated_leads'  # This adds a back-reference to Type
+        backref='associated_leads',
+     
+        passive_deletes=True,
+    
+        
     )
 
     @hybrid_property

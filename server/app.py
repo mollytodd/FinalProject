@@ -17,29 +17,27 @@ from models import *
 
 
 
-cors = CORS(app)
+
+# class Signup(Resource):
+#     def post(self):
+#         username = request.get_json()["username"]
+#         email = request.get_json()["email"]
+#         new_user = User(
+#             username=username,
+#             email=email,
+#         )
+
+#         password = request.get_json()["password"]
+#         new_user.password_hash = password
+#         db.session.add(new_user)
+#         db.session.commit()
+#         session["user_id"] = new_user.id
+
+#         # return new_user.to_dict()
+#         return new_user.to_dict()
 
 
-class Signup(Resource):
-    def post(self):
-        username = request.get_json()["username"]
-        email = request.get_json()["email"]
-        new_user = User(
-            username=username,
-            email=email,
-        )
-
-        password = request.get_json()["password"]
-        new_user.password_hash = password
-        db.session.add(new_user)
-        db.session.commit()
-        session["user_id"] = new_user.id
-
-        # return new_user.to_dict()
-        return new_user.to_dict()
-
-
-api.add_resource(Signup, "/signup")
+# api.add_resource(Signup, "/signup")
 
 class Login(Resource):
     def post(self):
@@ -123,6 +121,19 @@ class LeadById(Resource):
 
         return make_response(formatted_lead, 200)
     
+    def delete(self, lead_id):
+        lead = Lead.query.get(lead_id)
+
+        if lead is None:
+            return {"error": "Lead not found"}, 404
+
+        # Remove the lead from the session
+        db.session.delete(lead)
+        db.session.commit()
+
+        return {"message": "Lead deleted successfully"}, 200
+
+
 api.add_resource(LeadById, "/leads/<int:lead_id>")
 
 class AddLead(Resource):
@@ -274,19 +285,19 @@ class LeadsByStage(Resource):
 
 api.add_resource(LeadsByStage, "/leads/stage/<int:stage_id>")
 
-class DeleteLead(Resource):
-    def delete(self, lead_id):
-        lead = Lead.query.get(lead_id)
+# class DeleteLead(Resource):
+#     def delete(self, lead_id):
+#         with db.session.begin():
+#             lead = Lead.query.with_for_update().get(lead_id)
 
-        if lead is None:
-            return {"error": "Lead not found"}, 404
+#             if lead is None:
+#                 return {"error": "Lead not found"}, 404
 
-        db.session.delete(lead)
-        db.session.commit()
+#             db.session.delete(lead)
 
-        return {"message": "Lead deleted successfully"}, 200
+#         return {"message": "Lead deleted successfully"}, 200
 
-api.add_resource(DeleteLead, "/leads/<int:lead_id>")
+# api.add_resource(DeleteLead, "/leads/<int:lead_id>")
 
 
 class Users(Resource):
