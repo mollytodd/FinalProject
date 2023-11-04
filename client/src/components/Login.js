@@ -37,6 +37,9 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Your login logic here
+
+    // Example:
     fetch("http://localhost:5555/login", {
       method: "POST",
       headers: {
@@ -62,81 +65,141 @@ const Login = () => {
   };
 
   return (
-    <Flex
-      flexDirection="column"
-      width="100wh"
-      height="100vh"
-      backgroundColor="gray.200"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Stack
-        flexDir="column"
-        mb="2"
+    <Flex flexDirection="row" width="100wh" height="100vh">
+      {/* Left Half - Text and Form */}
+      <Box
+        width="50%"
+        backgroundColor="gray.100"
+        display="flex"
+        flexDirection="column"
         justifyContent="center"
         alignItems="center"
+        p="2rem"
       >
-        <Avatar bg="teal.500" />
-        <Heading color="teal.400">Welcome to LeadPulse</Heading>
-        <Box minW={{ base: "90%", md: "468px" }}>
+        <Box mb={8}>
+          {" "}
+          {/* Add margin-bottom to create spacing */}
+          <Avatar bg="blue.400" />
+        </Box>
+        <Heading color="blue.900" mb={8}>
+          Welcome Back.
+        </Heading>
+        <Box
+          backgroundColor="white"
+          p="1rem"
+          borderRadius="md"
+          width="50%" // To ensure the box takes the entire width
+        >
           <form onSubmit={handleSubmit}>
-            <Stack
-              spacing={4}
-              p="1rem"
-              backgroundColor="whiteAlpha.900"
-              boxShadow="md"
+            <FormControl>
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<CFaUserAlt color="gray.300" />}
+                />
+                <Input
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </InputGroup>
+            </FormControl>
+            <FormControl>
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  color="gray.300"
+                  children={<CFaLock color="gray.300" />}
+                />
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <InputRightElement width="4.5rem">
+                  <Button h="1.75rem" size="sm" onClick={handleShowClick}>
+                    {showPassword ? "Hide" : "Show"}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+              <FormHelperText textAlign="right"></FormHelperText>
+            </FormControl>
+            <Button
+              borderRadius={0}
+              type="submit"
+              variant="solid"
+              colorScheme="blue"
+              width="full"
             >
-              <FormControl>
-                <InputGroup>
-                  <InputLeftElement
-                    pointerEvents="none"
-                    children={<CFaUserAlt color="gray.300" />}
-                  />
-                  <Input
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                  />
-                </InputGroup>
-              </FormControl>
-              <FormControl>
-                <InputGroup>
-                  <InputLeftElement
-                    pointerEvents="none"
-                    color="gray.300"
-                    children={<CFaLock color="gray.300" />}
-                  />
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <InputRightElement width="4.5rem">
-                    <Button h="1.75rem" size="sm" onClick={handleShowClick}>
-                      {showPassword ? "Hide" : "Show"}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-                <FormHelperText textAlign="right">
-                 
-                </FormHelperText>
-              </FormControl>
-              <Button
-                borderRadius={0}
-                type="submit"
-                variant="solid"
-                colorScheme="teal"
-                width="full"
-              >
-                Login
-              </Button>
-            </Stack>
+              Login
+            </Button>
           </form>
         </Box>
-      </Stack>
-   
+      </Box>
+
+      <Box
+        width="50%"
+        height="100%"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="flex-start"
+        backgroundColor="white"
+      >
+        <div>
+          <Heading
+            color="blue.800"
+            size="lg"
+            mb={8}
+            style={{ marginLeft: "20px" }}
+          >
+            Transforming Leads Into Success. With LeadPulse you get:
+          </Heading>
+          <Stack spacing={8} color="blue.900">
+            <Flex alignItems="center" style={{ marginLeft: "20px" }}>
+              <span role="img" aria-label="checkmark">
+                ✅
+              </span>
+              <span style={{ marginLeft: "8px" }}>
+                A way to store all leads
+              </span>
+            </Flex>
+            <Flex alignItems="center" style={{ marginLeft: "20px" }}>
+              <span role="img" aria-label="checkmark">
+                ✅
+              </span>
+              <span style={{ marginLeft: "8px" }}>Charts and Dashboards</span>
+            </Flex>
+            <Flex alignItems="center" style={{ marginLeft: "20px" }}>
+              <span role="img" aria-label="checkmark">
+                ✅
+              </span>
+              <span style={{ marginLeft: "8px" }}>
+                Customizable to-do lists
+              </span>
+            </Flex>
+            <Flex alignItems="center" style={{ marginLeft: "20px" }}>
+              <span role="img" aria-label="checkmark">
+                ✅
+              </span>
+              <span style={{ marginLeft: "8px" }}>
+                A better way to close business
+              </span>
+            </Flex>
+          </Stack>
+        </div>
+        <div
+          style={{
+            width: "100%",
+            height: "50%",
+            backgroundImage:
+              "url(https://engeniusweb.com/wp-content/uploads/2019/09/AdobeStock_583096027-900x600.jpeg)",
+            backgroundSize: "cover",
+          }}
+        ></div>
+      </Box>
     </Flex>
   );
 };

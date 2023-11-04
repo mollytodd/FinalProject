@@ -32,6 +32,7 @@ const LeadsTable = () => {
     fetch("http://localhost:5555/leads")
       .then((response) => response.json())
       .then((data) => {
+        console.log("Fetched leads data:", data);
         setLeads(data);
       })
       .catch((error) => {

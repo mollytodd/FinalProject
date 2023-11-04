@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field } from "formik";
 import {
   Box,
@@ -8,14 +8,47 @@ import {
   FormControl,
   FormLabel,
   Select,
-} from "@chakra-ui/react"
-
+} from "@chakra-ui/react";
 
 function LeadForm({ onAddLead }) {
-  const handleSubmit = (values, { resetForm }) => {
-    // Call the onAddLead function to add the new lead
-    onAddLead(values);
-    resetForm();
+  const [formValues, setFormValues] = useState({
+    lead_name: "",
+    email: "",
+    phone_number: "",
+    notes: "",
+    stage: "",
+    lead_type: "",
+  });
+
+  const handleSubmit = async (values, { resetForm }) => {
+    try {
+      // Make a POST request to your API endpoint
+      const response = await fetch("/leads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      if (response.ok) {
+        // Call the onAddLead function if the API request was successful
+        onAddLead(values);
+        resetForm();
+        setFormValues({
+          lead_name: "",
+          email: "",
+          phone_number: "",
+          notes: "",
+          stage: "",
+          lead_type: "",
+        });
+      } else {
+        console.error("API request failed");
+      }
+    } catch (error) {
+      console.error("Error while making API request:", error);
+    }
   };
 
   return (
@@ -23,17 +56,7 @@ function LeadForm({ onAddLead }) {
       <Heading fontSize="4xl" mb="4">
         Add a New Lead
       </Heading>
-      <Formik
-        initialValues={{
-          lead_name: "",
-          email: "",
-          phone_number: "",
-          notes: "",
-          stage_name: "",
-          type_names: "", // Use a single field for lead type
-        }}
-        onSubmit={handleSubmit}
-      >
+      <Formik initialValues={formValues} onSubmit={handleSubmit}>
         <Form>
           <Field name="lead_name">
             {({ field }) => (
@@ -95,6 +118,7 @@ function LeadForm({ onAddLead }) {
                   <option value="Flyer">Flyer</option>
                   <option value="Walk By">Walk By</option>
                   <option value="Other">Other</option>
+                  <option value="TikTok">TikTok</option>
                 </Select>
               </FormControl>
             )}
