@@ -54,7 +54,7 @@ const TodoDropdown = () => {
         />
         <IconButton
           icon={<AddIcon />}
-          colorScheme="blue"
+          colorScheme="black"
           onClick={addTodo}
           ml={2}
         />

@@ -155,7 +155,7 @@ const Login = () => {
             mb={8}
             style={{ marginLeft: "20px" }}
           >
-            Transforming Leads Into Success. With LeadPulse you get:
+            Transforming Leads Into Success. With LeadPulse You Have:
           </Heading>
           <Stack spacing={8} color="blue.900">
             <Flex alignItems="center" style={{ marginLeft: "20px" }}>
@@ -163,21 +163,21 @@ const Login = () => {
                 ✅
               </span>
               <span style={{ marginLeft: "8px" }}>
-                A way to store all leads
+                A way to categorize and store all leads
               </span>
             </Flex>
             <Flex alignItems="center" style={{ marginLeft: "20px" }}>
               <span role="img" aria-label="checkmark">
                 ✅
               </span>
-              <span style={{ marginLeft: "8px" }}>Charts and Dashboards</span>
+              <span style={{ marginLeft: "8px" }}>Dashboard and Chart breakdowns of leads by source and stage</span>
             </Flex>
             <Flex alignItems="center" style={{ marginLeft: "20px" }}>
               <span role="img" aria-label="checkmark">
                 ✅
               </span>
               <span style={{ marginLeft: "8px" }}>
-                Customizable to-do lists
+                Customizable to-do lists and reminders to call leads
               </span>
             </Flex>
             <Flex alignItems="center" style={{ marginLeft: "20px" }}>

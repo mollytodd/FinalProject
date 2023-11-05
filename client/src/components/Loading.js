@@ -19,7 +19,7 @@ const Loading = () => {
         borderRightColor="transparent"
         animation="spin 1s linear infinite"
       />
-      <Box mt={4}>Loading your dashboard...</Box>
+      <Box mt={4}>Just a second......</Box>
       <style>
         {`
           @keyframes spin {

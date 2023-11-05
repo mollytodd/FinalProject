@@ -9,15 +9,13 @@ const BarChart = () => {
   const [dataFetched, setDataFetched] = useState(false);
 
   // Function to generate unique colors
-  const generateUniqueColors = (count) => {
-    const uniqueColors = [];
-    for (let i = 0; i < count; i++) {
-      const hue = (i * 360) / count;
-      uniqueColors.push(`hsla(${hue}, 70%, 60%, 0.7)`);
-    }
-    return uniqueColors;
-  };
-
+const generateUniqueColors = (count) => {
+  const uniqueColors = [];
+  for (let i = 0; i < count; i++) {
+    uniqueColors.push("lightblue"); // Use light blue color
+  }
+  return uniqueColors;
+};
   useEffect(() => {
     fetch("http://localhost:5555/leads")
       .then((response) => {

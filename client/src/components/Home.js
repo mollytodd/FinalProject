@@ -1,13 +1,19 @@
 import React, {useEffect, useState} from "react";
-import { Button, Heading, Flex, Box, SimpleGrid } from "@chakra-ui/react";
+import { Button, Flex, Box, Text } from "@chakra-ui/react";
 import Logout from "./Logout";
 import PieChart from "./PieChart";
 import Sidebar from "./Sidebar";
 import BarChart from "./BarChart";
+// import ScatterPlot from "./ScatterPlot";
 import SummaryBoxes from "./SummaryBoxes";
 import Loading from "./Loading";
 import TodoDropdown from "./TodoDropdown";
+import HomeHeader from "./HomeHeader";
+
 import { useAuth } from "./AuthContext"; 
+
+
+
 
 function Home({
   leadData,
@@ -50,29 +56,42 @@ function Home({
           >
             <Logout setUser={setUser} />
           </Button>
-          
-          
-            <TodoDropdown />
-         
-          <Box mt={8} textAlign="center">
-            <Heading as="h2" size="xl">
-              Your Lead Dashboard
-            </Heading>
-          </Box>
-          <Box mt={8}>
-            <SimpleGrid spacing={10}>
-              <SummaryBoxes
-                totalLeads={totalLeads}
-                totalWonLeads={totalWonLeads}
-                totalLostLeads={totalLostLeads}
-              />
-              <div style={{ display: "flex" }}>
+          <HomeHeader />
+
+          <Box mt={6} marginLeft="-250px">
+            {/* <TodoDropdown /> */}
+            <SummaryBoxes
+              totalLeads={totalLeads}
+              totalWonLeads={totalWonLeads}
+              totalLostLeads={totalLostLeads}
+            />
+            <Flex flexDirection="row">
+              <Box
+                p={4}
+                bgColor="white"
+                borderRadius="lg"
+                // Remove border style
+              >
+                <Text align="center" fontSize="lg" fontWeight="light" mb={4}>
+                  Lead type %
+                </Text>
                 <PieChart />
+              </Box>
+              <Box
+                p={4}
+                bgColor="white"
+                borderRadius="lg"
+                // Remove border style
+              >
+                <Text align="center" fontSize="lg" fontWeight="light" mb={4}>
+                  Lead Stage Counts
+                </Text>
                 <BarChart />
-              </div>
-            </SimpleGrid>
-            <Sidebar />
+              </Box>
+            </Flex>
           </Box>
+
+          <Sidebar />
         </>
       )}
     </Flex>
@@ -80,3 +99,9 @@ function Home({
 }
 
 export default Home;
+
+
+
+
+
+

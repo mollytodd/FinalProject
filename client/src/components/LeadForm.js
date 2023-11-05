@@ -11,52 +11,51 @@ import {
 } from "@chakra-ui/react";
 
 function LeadForm({ onAddLead }) {
-  const [formValues, setFormValues] = useState({
-    lead_name: "",
-    email: "",
-    phone_number: "",
-    notes: "",
-    stage: "",
-    lead_type: "",
-  });
+const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+  try {
+    console.log("Form values before submission:", values);
 
-  const handleSubmit = async (values, { resetForm }) => {
-    try {
-      // Make a POST request to your API endpoint
-      const response = await fetch("/leads", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+    // Make a POST request to your API endpoint
+    const response = await fetch("/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
 
-      if (response.ok) {
-        // Call the onAddLead function if the API request was successful
-        onAddLead(values);
-        resetForm();
-        setFormValues({
+    if (response.ok) {
+      // Call the onAddLead function if the API request was successful
+      onAddLead(values);
+
+      console.log("Form values after successful submission:", values);
+
+      setSubmitting(false);
+      resetForm();
+    } else {
+      console.error("API request failed");
+    }
+  } catch (error) {
+    console.error("Error while making API request:", error);
+  }
+};
+  return (
+    <Box>
+      <Heading fontSize="4xl" mb="4">
+        Add a New Lead
+      </Heading>
+      <Formik
+        enableReinitialize
+        initialValues={{
           lead_name: "",
           email: "",
           phone_number: "",
           notes: "",
           stage: "",
           lead_type: "",
-        });
-      } else {
-        console.error("API request failed");
-      }
-    } catch (error) {
-      console.error("Error while making API request:", error);
-    }
-  };
-
-  return (
-    <Box>
-      <Heading fontSize="4xl" mb="4">
-        Add a New Lead
-      </Heading>
-      <Formik initialValues={formValues} onSubmit={handleSubmit}>
+        }}
+        onSubmit={handleSubmit}
+      >
         <Form>
           <Field name="lead_name">
             {({ field }) => (
