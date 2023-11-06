@@ -4,12 +4,25 @@ import { Table, Thead, Tbody, Tr, Th, Td, Button } from "@chakra-ui/react";
 import LeadForm from "./LeadForm";
 import DeleteLeadButton from "./DeleteLeadButton";
 import Loading from "./Loading";
+import SearchBar from "./SearchBar";
 
-const LeadsTable = ({handleSubmit}) => {
+const LeadsTable = ({ handleSubmit }) => {
   const [leads, setLeads] = useState([]);
   const [isAddingLead, setIsAddingLead] = useState(false);
   const [isLoadingLeads, setIsLoadingLeads] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredLeads, setFilteredLeads] = useState([]); // Initialize filteredLeads state here
   const history = useHistory();
+
+  const handleSearch = (query) => {
+    // Filter the leads based on the search query
+    const filteredLeads = leads.filter((lead) =>
+      lead.lead_name.toLowerCase().includes(query.toLowerCase())
+    );
+    // Update the leads state with the filtered results
+  setFilteredLeads(filteredLeads);
+  setSearchQuery(query);
+  };
 
   const handleDelete = (leadId) => {
     fetch(`http://localhost:5555/leads/${leadId}`, {
@@ -29,27 +42,35 @@ const LeadsTable = ({handleSubmit}) => {
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetch("http://localhost:5555/leads")
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Fetched leads data:", data);
+    const fetchLeads = async () => {
+      try {
+        const response = await fetch("http://localhost:5555/leads");
+        if (response.ok) {
+          const data = await response.json();
           setLeads(data);
-          setIsLoadingLeads(false); // Set loading state to false
-        })
-        .catch((error) => {
-          console.error("Error fetching leads:", error);
-          setIsLoadingLeads(false); // Set loading state to false
-        });
-    }, 2000); // Adjust the delay time as needed
+          setFilteredLeads(data); // Set filteredLeads initially to all leads
+          setIsLoadingLeads(false);
+        } else {
+          console.error("Error fetching leads:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching leads:", error);
+        setIsLoadingLeads(false);
+      }
+    };
 
-    return () => clearTimeout(timer); // Clear timeout if the component is unmounted
+    const timer = setTimeout(() => {
+      fetchLeads();
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   const navigateToHome = () => {
     history.push("/home");
   };
-
 
   // Fetch leads after a new lead is added
 
@@ -96,9 +117,24 @@ const LeadsTable = ({handleSubmit}) => {
       </div>
 
       {isLoadingLeads ? (
-        <Loading />
+               <Loading />
       ) : (
-        <div style={{ display: "flex" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "-70px",
+          }}
+        >
+          <SearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            leads={leads}
+            setFilteredLeads={setFilteredLeads}
+          />
+        </div>
+      )}
           {isAddingLead ? (
             <LeadForm onAddLead={handleAddLead} />
           ) : (
@@ -113,7 +149,7 @@ const LeadsTable = ({handleSubmit}) => {
                 </Tr>
               </Thead>
               <Tbody>
-                {leads.map((lead) => (
+                {filteredLeads.map((lead) => (
                   <Tr key={lead.lead_id}>
                     <Td>{lead.lead_name}</Td>
                     <Td>{lead.phone_number}</Td>
@@ -133,8 +169,6 @@ const LeadsTable = ({handleSubmit}) => {
           )}
         </div>
       )}
-    </div>
-  );
-};
+
 
 export default LeadsTable;
