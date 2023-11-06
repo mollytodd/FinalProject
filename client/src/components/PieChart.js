@@ -129,6 +129,7 @@ const PieChart = () => {
       ) : (
         <p>Loading data...</p>
       )}
+   
     </div>
   );
 };

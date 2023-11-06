@@ -20,26 +20,45 @@ const LeadsTable = ({ handleSubmit }) => {
       lead.lead_name.toLowerCase().includes(query.toLowerCase())
     );
     // Update the leads state with the filtered results
-  setFilteredLeads(filteredLeads);
-  setSearchQuery(query);
+    setFilteredLeads(filteredLeads);
+    setSearchQuery(query);
   };
 
-  const handleDelete = (leadId) => {
-    fetch(`http://localhost:5555/leads/${leadId}`, {
-      method: "DELETE",
+const handleDelete = (leadId) => {
+  fetch(`http://localhost:5555/leads/${leadId}`, {
+    method: "DELETE",
+  })
+    .then((response) => {
+      if (response.ok) {
+        const updatedLeads = leads.filter((lead) => lead.lead_id !== leadId);
+        const updatedFilteredLeads = filteredLeads.filter(
+          (lead) => lead.lead_id !== leadId
+        );
+        setLeads(updatedLeads);
+        setFilteredLeads(updatedFilteredLeads);
+      } else {
+        console.error("Error deleting lead:", response.statusText);
+        // Update the state even if the deletion fails
+        const updatedLeads = leads.filter((lead) => lead.lead_id !== leadId);
+        const updatedFilteredLeads = filteredLeads.filter(
+          (lead) => lead.lead_id !== leadId
+        );
+        setLeads(updatedLeads);
+        setFilteredLeads(updatedFilteredLeads);
+      }
     })
-      .then((response) => {
-        if (response.ok) {
-          const updatedLeads = leads.filter((lead) => lead.lead_id !== leadId);
-          setLeads(updatedLeads);
-        } else {
-          console.error("Error deleting lead:", response.statusText);
-        }
-      })
-      .catch((error) => {
-        console.error("Error deleting lead:", error);
-      });
-  };
+    .catch((error) => {
+      console.error("Error deleting lead:", error);
+      // Update the state even if the deletion fails
+      const updatedLeads = leads.filter((lead) => lead.lead_id !== leadId);
+      const updatedFilteredLeads = filteredLeads.filter(
+        (lead) => lead.lead_id !== leadId
+      );
+      setLeads(updatedLeads);
+      setFilteredLeads(updatedFilteredLeads);
+    });
+};
+
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -76,6 +95,7 @@ const LeadsTable = ({ handleSubmit }) => {
 
   const handleAddLead = (newLead) => {
     setLeads((prevLeads) => [...prevLeads, newLead]);
+    setFilteredLeads((prevFilteredLeads) => [...prevFilteredLeads, newLead]);
     setIsAddingLead(false);
   };
   useEffect(() => {
@@ -117,7 +137,7 @@ const LeadsTable = ({ handleSubmit }) => {
       </div>
 
       {isLoadingLeads ? (
-               <Loading />
+        <Loading />
       ) : (
         <div
           style={{
@@ -135,40 +155,40 @@ const LeadsTable = ({ handleSubmit }) => {
           />
         </div>
       )}
-          {isAddingLead ? (
-            <LeadForm onAddLead={handleAddLead} />
-          ) : (
-            <Table variant="striped" colorScheme="teal">
-              <Thead>
-                <Tr>
-                  <Th>NAME</Th>
-                  <Th>Phone Number</Th>
-                  <Th>Lead Type</Th>
-                  <Th>Stage</Th>
-                  <Th>Notes</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {filteredLeads.map((lead) => (
-                  <Tr key={lead.lead_id}>
-                    <Td>{lead.lead_name}</Td>
-                    <Td>{lead.phone_number}</Td>
-                    <Td>{lead.lead_type}</Td>
-                    <Td>{lead.stage}</Td>
-                    <Td>{lead.notes}</Td>
-                    <Td>
-                      <DeleteLeadButton
-                        onDeleteLead={handleDelete}
-                        leadId={lead.lead_id}
-                      />
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          )}
-        </div>
+      {isAddingLead ? (
+        <LeadForm onAddLead={handleAddLead} />
+      ) : (
+        <Table variant="striped" colorScheme="teal">
+          <Thead>
+            <Tr>
+              <Th>NAME</Th>
+              <Th>Phone Number</Th>
+              <Th>Lead Type</Th>
+              <Th>Stage</Th>
+              <Th>Notes</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {filteredLeads.map((lead) => (
+              <Tr key={lead.lead_id}>
+                <Td>{lead.lead_name}</Td>
+                <Td>{lead.phone_number}</Td>
+                <Td>{lead.lead_type}</Td>
+                <Td>{lead.stage}</Td>
+                <Td>{lead.notes}</Td>
+                <Td>
+                  <DeleteLeadButton
+                    onDeleteLead={handleDelete}
+                    leadId={lead.lead_id}
+                  />
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
       )}
-
+    </div>
+  );
+};
 
 export default LeadsTable;
