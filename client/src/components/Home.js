@@ -73,7 +73,7 @@ function Home({
                 // Remove border style
               >
                 <Text align="center" fontSize="lg" fontWeight="light" mb={4}>
-                  Lead type %
+                  Lead type 
                 </Text>
                 <PieChart />
               </Box>
@@ -84,7 +84,7 @@ function Home({
                 // Remove border style
               >
                 <Text align="center" fontSize="lg" fontWeight="light" mb={4}>
-                  Lead Stage Counts
+                  Lead stage
                 </Text>
                 <BarChart />
               </Box>

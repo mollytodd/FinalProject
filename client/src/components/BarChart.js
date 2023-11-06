@@ -12,7 +12,7 @@ const BarChart = () => {
 const generateUniqueColors = (count) => {
   const uniqueColors = [];
   for (let i = 0; i < count; i++) {
-    uniqueColors.push("lightblue"); // Use light blue color
+    uniqueColors.push("violet"); // Use light blue color
   }
   return uniqueColors;
 };
