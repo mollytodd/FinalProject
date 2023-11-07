@@ -117,14 +117,14 @@ function LeadForm({ onAddLead }) {
               )}
             </Field>
 
-            <Field name="lead_type">
+            <Field name="type_names">
               {({ field }) => (
                 <FormControl>
                   <FormLabel>Lead Type</FormLabel>
                   <Select
                     {...field}
                     placeholder="Select a Lead Type"
-                    value={values.lead_type}
+                    value={values.type_names}
                     onChange={(e) => setFieldValue("lead_type", e.target.value)}
                   >
                     <option value="Google">Google</option>

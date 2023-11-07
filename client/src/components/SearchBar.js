@@ -1,51 +1,62 @@
-import React from "react";
-import { Input, InputGroup, InputRightElement } from "@chakra-ui/react";
-import { FaSearch } from "react-icons/fa"; // Import the search icon
+import React, { useState } from "react";
+import {
+  Input,
+  Button,
+  Flex,
+  InputGroup,
+  InputRightElement,
+} from "@chakra-ui/react";
 
-const SearchBar = ({
-  searchQuery,
-  setSearchQuery,
-  leads,
-  setFilteredLeads,
-}) => {
-  const handleSearch = (query) => {
-    const filteredLeads = leads.filter((lead) =>
-      lead.lead_name.toLowerCase().includes(query.toLowerCase())
+const SearchBar = ({ leads, setFilteredLeads }) => {
+  const [searchText, setSearchText] = useState("");
+const handleSearch = () => {
+  const filteredLeads = leads.filter((lead) => {
+    return (
+      (typeof lead.lead_name === "string" &&
+        lead.lead_name.toLowerCase().includes(searchText.toLowerCase())) ||
+      (
+        (Array.isArray(lead.lead_type)
+          ? lead.lead_type.join(" ")
+          : lead.lead_type) || ""
+      )
+        .toString()
+        .toLowerCase()
+        .includes(searchText.toLowerCase()) ||
+      (typeof lead.stage === "string" &&
+        lead.stage.toLowerCase().includes(searchText.toLowerCase()))
     );
-    setFilteredLeads(filteredLeads);
-    setSearchQuery(query);
+  });
+
+  setFilteredLeads(filteredLeads);
+};
+
+  const handleInputChange = (e) => {
+    setSearchText(e.target.value);
   };
 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      // Detect Enter key press and perform the search
-      handleSearch(searchQuery);
+      handleSearch();
     }
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        marginTop: "0",
-        paddingTop: "20px",
-      }}
-    >
+    <Flex alignItems="center">
       <InputGroup>
         <Input
           type="text"
-          placeholder="Search leads by name"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by Name, Lead Type, or Stage"
+          value={searchText}
+          onChange={handleInputChange}
           onKeyPress={handleKeyPress}
         />
-        <InputRightElement
-          children={<FaSearch onClick={() => handleSearch(searchQuery)} />} // Clicking the icon performs the search
-          style={{ cursor: "pointer", marginRight: "5px" }}
-        />
+        <InputRightElement width="4.5rem">
+          <Button h="1.75rem" size="sm" onClick={handleSearch}>
+            Search
+          </Button>
+        </InputRightElement>
       </InputGroup>
-    </div>
+    </Flex>
   );
 };
 

@@ -1,43 +1,88 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Table, Thead, Tbody, Tr, Th, Td, Button } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
 import LeadForm from "./LeadForm";
 import DeleteLeadButton from "./DeleteLeadButton";
 import Loading from "./Loading";
+import EditLeadForm from "./EditLeadForm";
 import SearchBar from "./SearchBar";
+
+
+
 
 const LeadsTable = ({ handleSubmit }) => {
   const [leads, setLeads] = useState([]);
   const [isAddingLead, setIsAddingLead] = useState(false);
   const [isLoadingLeads, setIsLoadingLeads] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
   const [filteredLeads, setFilteredLeads] = useState([]); // Initialize filteredLeads state here
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Moved here
+  const [selectedLead, setSelectedLead] = useState(null); // Moved here
   const history = useHistory();
 
-  const handleSearch = (query) => {
-    // Filter the leads based on the search query
-    const filteredLeads = leads.filter((lead) =>
-      lead.lead_name.toLowerCase().includes(query.toLowerCase())
-    );
-    // Update the leads state with the filtered results
-    setFilteredLeads(filteredLeads);
-    setSearchQuery(query);
+  const handleUpdateLead = (leadId, updatedData) => {
+    fetch(`http://localhost:5555/leads/${leadId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          const updatedLeads = leads.map((lead) =>
+            lead.lead_id === leadId ? { ...lead, ...updatedData } : lead
+          );
+          setLeads(updatedLeads);
+        } else {
+          console.error("Error updating lead:", response.statusText);
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating lead:", error);
+      });
   };
 
-const handleDelete = (leadId) => {
-  fetch(`http://localhost:5555/leads/${leadId}`, {
-    method: "DELETE",
-  })
-    .then((response) => {
-      if (response.ok) {
-        const updatedLeads = leads.filter((lead) => lead.lead_id !== leadId);
-        const updatedFilteredLeads = filteredLeads.filter(
-          (lead) => lead.lead_id !== leadId
-        );
-        setLeads(updatedLeads);
-        setFilteredLeads(updatedFilteredLeads);
-      } else {
-        console.error("Error deleting lead:", response.statusText);
+ 
+
+  const handleDelete = (leadId) => {
+    fetch(`http://localhost:5555/leads/${leadId}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.ok) {
+          const updatedLeads = leads.filter((lead) => lead.lead_id !== leadId);
+          const updatedFilteredLeads = filteredLeads.filter(
+            (lead) => lead.lead_id !== leadId
+          );
+          setLeads(updatedLeads);
+          setFilteredLeads(updatedFilteredLeads);
+        } else {
+          console.error("Error deleting lead:", response.statusText);
+          // Update the state even if the deletion fails
+          const updatedLeads = leads.filter((lead) => lead.lead_id !== leadId);
+          const updatedFilteredLeads = filteredLeads.filter(
+            (lead) => lead.lead_id !== leadId
+          );
+          setLeads(updatedLeads);
+          setFilteredLeads(updatedFilteredLeads);
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting lead:", error);
         // Update the state even if the deletion fails
         const updatedLeads = leads.filter((lead) => lead.lead_id !== leadId);
         const updatedFilteredLeads = filteredLeads.filter(
@@ -45,20 +90,8 @@ const handleDelete = (leadId) => {
         );
         setLeads(updatedLeads);
         setFilteredLeads(updatedFilteredLeads);
-      }
-    })
-    .catch((error) => {
-      console.error("Error deleting lead:", error);
-      // Update the state even if the deletion fails
-      const updatedLeads = leads.filter((lead) => lead.lead_id !== leadId);
-      const updatedFilteredLeads = filteredLeads.filter(
-        (lead) => lead.lead_id !== leadId
-      );
-      setLeads(updatedLeads);
-      setFilteredLeads(updatedFilteredLeads);
-    });
-};
-
+      });
+  };
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -96,7 +129,7 @@ const handleDelete = (leadId) => {
   const handleAddLead = (newLead) => {
     setLeads((prevLeads) => [...prevLeads, newLead]);
     setFilteredLeads((prevFilteredLeads) => [...prevFilteredLeads, newLead]);
-    setIsAddingLead(false);
+    setIsAddingLead(false); // Set isAddingLead to false after adding the lead
   };
   useEffect(() => {
     if (!isAddingLead) {
@@ -114,6 +147,10 @@ const handleDelete = (leadId) => {
       return () => clearTimeout(timer); // Clear timeout if the component is unmounted
     }
   }, [isAddingLead]);
+
+  const handleCancelEdit = () => {
+  setIsEditModalOpen(false);
+};
 
   return (
     <div>
@@ -136,6 +173,8 @@ const handleDelete = (leadId) => {
         </Button>
       </div>
 
+      <SearchBar leads={leads} setFilteredLeads={setFilteredLeads} />
+
       {isLoadingLeads ? (
         <Loading />
       ) : (
@@ -146,14 +185,7 @@ const handleDelete = (leadId) => {
             alignItems: "center",
             marginTop: "-70px",
           }}
-        >
-          <SearchBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            leads={leads}
-            setFilteredLeads={setFilteredLeads}
-          />
-        </div>
+        ></div>
       )}
       {isAddingLead ? (
         <LeadForm onAddLead={handleAddLead} />
@@ -166,6 +198,7 @@ const handleDelete = (leadId) => {
               <Th>Lead Type</Th>
               <Th>Stage</Th>
               <Th>Notes</Th>
+              <Th>Actions</Th> {/* Added a column for actions */}
             </Tr>
           </Thead>
           <Tbody>
@@ -178,15 +211,39 @@ const handleDelete = (leadId) => {
                 <Td>{lead.notes}</Td>
                 <Td>
                   <DeleteLeadButton
-                    onDeleteLead={handleDelete}
-                    leadId={lead.lead_id}
+                    onDeleteLead={() => handleDelete(lead.lead_id)}
                   />
+                  <EditLeadForm
+                    lead={lead}
+                    onUpdateLead={(updatedData) =>
+                      handleUpdateLead(lead.lead_id, updatedData)
+                    }
+                  />{" "}
+                  {/* Added EdieadForm */}
                 </Td>
               </Tr>
             ))}
           </Tbody>
         </Table>
       )}
+      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit Lead</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {selectedLead && (
+              <EditLeadForm
+                lead={selectedLead}
+                onUpdateLead={handleUpdateLead}
+                onCancelEdit={handleCancelEdit}
+                isEditModalOpen={isEditModalOpen} // Pass the state
+                setIsEditModalOpen={setIsEditModalOpen} // Pass the state setter
+              />
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

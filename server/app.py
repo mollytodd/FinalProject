@@ -148,18 +148,18 @@ class AddLead(Resource):
         )
 
         # Find the stage by name
-        stage_name = data.get("stage_name")
+        stage_name = data.get("stage")
         if stage_name:
             stage = Stage.query.filter_by(name=stage_name).first()
             if stage:
                 new_lead.stage = stage
 
         # Find the types by name
-        type_names = data.get("type_names", [])
-        for type_name in type_names:
-            lead_type = Type.query.filter_by(name=type_name).first()
-            if lead_type:
-                new_lead.lead_types.append(lead_type)
+        lead_type = data.get("lead_type", None)
+        if lead_type:
+            lead_type_record = Type.query.filter_by(name=lead_type).first()
+            if lead_type_record:
+                new_lead.lead_types.append(lead_type_record)
 
         db.session.add(new_lead)
         db.session.commit()
@@ -177,8 +177,8 @@ class EditLead(Resource):
             return {"error": "Lead not found"}, 404
 
         # Update lead information
-        if "lead_name" in data:  # Use "lead_name" instead of "name"
-            lead.name = data["lead_name"]
+        if "lead_name" in data:
+            lead.lead_name = data["lead_name"]  # Use "lead_name" instead of "name"
         if "email" in data:
             lead.email = data["email"]
         if "phone_number" in data:
@@ -187,7 +187,7 @@ class EditLead(Resource):
             lead.notes = data["notes"]
 
         # Find the stage by name and update it
-        stage_name = data.get("stage_name")
+        stage_name = data.get("stage")
         if stage_name:
             stage = Stage.query.filter_by(name=stage_name).first()
             if stage:
@@ -196,7 +196,7 @@ class EditLead(Resource):
                 return {"error": "Stage not found"}, 404
 
         # Find the types by name and update them
-        type_names = data.get("type_names", [])
+        type_names = data.get("lead_type", [])
         lead.lead_types.clear()
         for type_name in type_names:
             lead_type = Type.query.filter_by(name=type_name).first()
@@ -208,6 +208,7 @@ class EditLead(Resource):
         return {"message": "Lead updated successfully"}, 200
 
 api.add_resource(EditLead, "/leads/<int:lead_id>")
+
 
 
 type_name_to_id = {
