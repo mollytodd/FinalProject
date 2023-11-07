@@ -1,4 +1,5 @@
-<img width="1100" alt="image" src="https://github.com/mollytodd/FinalProject/assets/131923397/cb8aba43-3815-425e-9f9e-697a77b6c2e4">
+<img width="1520" alt="image" src="https://github.com/mollytodd/FinalProject/assets/131923397/756ae497-e491-4536-89e1-23835b54f61e">
+
 
 ├── CONTRIBUTING.md
 ├── LICENSE.md
