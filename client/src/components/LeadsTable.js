@@ -1,62 +1,68 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Button,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-} from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td, Button } from "@chakra-ui/react";
 import LeadForm from "./LeadForm";
 import DeleteLeadButton from "./DeleteLeadButton";
 import Loading from "./Loading";
-import EditLeadForm from "./EditLeadForm";
+import * as XLSX from "xlsx";
 import SearchBar from "./SearchBar";
-
-
-
+import EditLeadButton from "./EditLeadButton";
+import EditLeadModal from "./EditLeadModal";
 
 const LeadsTable = ({ handleSubmit }) => {
   const [leads, setLeads] = useState([]);
   const [isAddingLead, setIsAddingLead] = useState(false);
   const [isLoadingLeads, setIsLoadingLeads] = useState(true);
-  const [filteredLeads, setFilteredLeads] = useState([]); // Initialize filteredLeads state here
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Moved here
-  const [selectedLead, setSelectedLead] = useState(null); // Moved here
+  const [filteredLeads, setFilteredLeads] = useState([]);
+  const [isEditing, setIsEditing] = useState(false); // Add isEditing state
+  const [editingLead, setEditingLead] = useState(null);
+
+  // Initialize filteredLeads state here
   const history = useHistory();
 
-  const handleUpdateLead = (leadId, updatedData) => {
-    fetch(`http://localhost:5555/leads/${leadId}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedData),
-    })
-      .then((response) => {
-        if (response.ok) {
-          const updatedLeads = leads.map((lead) =>
-            lead.lead_id === leadId ? { ...lead, ...updatedData } : lead
-          );
-          setLeads(updatedLeads);
-        } else {
-          console.error("Error updating lead:", response.statusText);
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating lead:", error);
-      });
+  const exportToExcel = () => {
+    const data = [
+      ["NAME", "Phone Number", "Lead Type", "Stage", "Notes"],
+      ...filteredLeads.map((lead) => [
+        lead.lead_name,
+        lead.phone_number,
+        lead.lead_type,
+        lead.stage,
+        lead.notes,
+      ]),
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Leads");
+
+    XLSX.writeFile(wb, "leads.xlsx"); // Trigger the download
   };
 
- 
+  const handleEdit = (leadId) => {
+    // Find the lead to edit by leadId
+    const leadToEdit = leads.find((lead) => lead.lead_id === leadId);
+
+    setEditingLead(leadToEdit); // Store the lead data being edited
+    setIsEditing(true); // Show the edit modal
+  };
+
+  const handleSaveEdit = (editedLeadData) => {
+    // Make a request to update the lead data in your backend
+    // Example: You can use fetch or another HTTP client
+
+    // After a successful update in the backend, update the state
+    const updatedLeads = leads.map((lead) => {
+      if (lead.lead_id === editedLeadData.lead_id) {
+        return { ...lead, ...editedLeadData };
+      } else {
+        return lead;
+      }
+    });
+
+    setLeads(updatedLeads); // Update the leads in your state
+    setEditingLead(null); // Clear the editingLead state
+  };
 
   const handleDelete = (leadId) => {
     fetch(`http://localhost:5555/leads/${leadId}`, {
@@ -148,105 +154,90 @@ const LeadsTable = ({ handleSubmit }) => {
     }
   }, [isAddingLead]);
 
-  const handleCancelEdit = () => {
-  setIsEditModalOpen(false);
-};
-
-return (
-  <div>
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row", // Change flexDirection to "row"
-        justifyContent: "space-between", // Use "space-between" to push the buttons to the edges
-        alignItems: "center", // Center the items vertically
-        margin: "10px",
-      }}
-    >
-      <Button colorScheme="teal" size="sm" onClick={navigateToHome}>
-        Back to Home
-      </Button>
-      <SearchBar leads={leads} setFilteredLeads={setFilteredLeads} />
-      <Button
-        colorScheme="teal"
-        size="sm"
-        onClick={() => setIsAddingLead(true)}
-      >
-        Add New Lead
-      </Button>
-    </div>
-
-    {isLoadingLeads ? (
-      <Loading />
-    ) : (
+  return (
+    <div>
       <div
         style={{
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "row",
+          justifyContent: "space-between",
           alignItems: "center",
-          marginTop: "-20px",
+          margin: "10px",
         }}
-      ></div>
-    )}
-    {isAddingLead ? (
-      <LeadForm onAddLead={handleAddLead} />
-    ) : (
-      <Table variant="striped" colorScheme="teal">
-        <Thead>
-          <Tr>
-            <Th>NAME</Th>
-            <Th>Phone Number</Th>
-            <Th>Lead Type</Th>
-            <Th>Stage</Th>
-            <Th>Notes</Th>
-            <Th>Actions</Th> {/* Added a column for actions */}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {filteredLeads.map((lead) => (
-            <Tr key={lead.lead_id}>
-              <Td>{lead.lead_name}</Td>
-              <Td>{lead.phone_number}</Td>
-              <Td>{lead.lead_type}</Td>
-              <Td>{lead.stage}</Td>
-              <Td>{lead.notes}</Td>
-              <Td>
-                <DeleteLeadButton
-                  onDeleteLead={() => handleDelete(lead.lead_id)}
-                />
-                <EditLeadForm
-                  lead={lead}
-                  onUpdateLead={(updatedData) =>
-                    handleUpdateLead(lead.lead_id, updatedData)
-                  }
-                />{" "}
-                {/* Added EdieadForm */}
-              </Td>
+      >
+        <Button colorScheme="twitter" size="sm" onClick={navigateToHome}>
+          Back to Home
+        </Button>
+        <SearchBar leads={leads} setFilteredLeads={setFilteredLeads} />
+        <Button
+          colorScheme="orange"
+          size="sm"
+          onClick={() => history.push("/add-lead")}
+        >
+          Add New Lead
+        </Button>
+        <Button colorScheme="green" size="sm" onClick={exportToExcel}>
+          Export to Excel
+        </Button>
+      </div>
+
+      {isLoadingLeads ? (
+        <Loading />
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "-20px",
+          }}
+        ></div>
+      )}
+      {isAddingLead ? (
+        <LeadForm onAddLead={handleAddLead} />
+      ) : (
+        <Table variant="striped" colorScheme="black">
+          <Thead>
+            <Tr>
+              <Th>NAME</Th>
+              <Th>Phone Number</Th>
+              <Th>Lead Type</Th>
+              <Th>Stage</Th>
+              <Th>Notes</Th>
+              <Th>Actions</Th> {/* Added a column for actions */}
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    )}
-    <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Edit Lead</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          {selectedLead && (
-            <EditLeadForm
-              lead={selectedLead}
-              onUpdateLead={handleUpdateLead}
-              onCancelEdit={handleCancelEdit}
-              isEditModalOpen={isEditModalOpen} // Pass the state
-              setIsEditModalOpen={setIsEditModalOpen} // Pass the state setter
-            />
-          )}
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  </div>
-);
+          </Thead>
+          <Tbody>
+            {filteredLeads.map((lead) => (
+              <Tr key={lead.lead_id}>
+                <Td>{lead.lead_name}</Td>
+                <Td>{lead.phone_number}</Td>
+                <Td>{lead.lead_type}</Td>
+                <Td>{lead.stage}</Td>
+                <Td>{lead.notes}</Td>
+                <Td>
+                  <EditLeadButton onClick={() => handleEdit(lead.lead_id)} />
+
+                  <DeleteLeadButton
+                    onDeleteLead={() => handleDelete(lead.lead_id)}
+                  />
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      )}
+
+      {isEditing && (
+        <EditLeadModal
+          isOpen={isEditing}
+          onClose={() => setIsEditing(false)}
+          lead={editingLead}
+          onSaveEdit={handleSaveEdit}
+        />
+      )}
+    </div>
+  );
 };
 
 export default LeadsTable;

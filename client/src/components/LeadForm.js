@@ -9,8 +9,11 @@ import {
   FormLabel,
   Select,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion"; // Import animation library
+import { useHistory } from "react-router-dom";
 
 function LeadForm({ onAddLead }) {
+  const history = useHistory();
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       console.log("Form values before submission:", values);
@@ -25,7 +28,7 @@ function LeadForm({ onAddLead }) {
       });
 
       if (response.ok) {
-        // Call the onAddLead function if the API request was successful
+       history.push("/leads");
         onAddLead(values);
 
         console.log("Form values after successful submission:", values);
@@ -39,9 +42,17 @@ function LeadForm({ onAddLead }) {
       console.error("Error while making API request:", error);
     }
   };
+
   return (
-    <Box>
-      <Heading fontSize="4xl" mb="4">
+    <Box
+      p={4}
+      borderRadius="md"
+      boxShadow="lg"
+      bg="white"
+      maxWidth="400px"
+      m="auto"
+    >
+      <Heading as="h2" size="xl" mb={4}>
         Add a New Lead
       </Heading>
       <Formik
@@ -60,46 +71,48 @@ function LeadForm({ onAddLead }) {
           <Form>
             <Field name="lead_name">
               {({ field }) => (
-                <FormControl>
+                <FormControl mb={4}>
                   <FormLabel>Name</FormLabel>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Enter Name" />
                 </FormControl>
               )}
             </Field>
 
             <Field name="email">
               {({ field }) => (
-                <FormControl>
+                <FormControl mb={4}>
                   <FormLabel>Email</FormLabel>
-                  <Input {...field} />
+                  <Input {...field} type="email" placeholder="Enter Email" />
                 </FormControl>
               )}
             </Field>
 
             <Field name="phone_number">
               {({ field }) => (
-                <FormControl>
+                <FormControl mb={4}>
                   <FormLabel>Phone Number</FormLabel>
-                  <Input {...field} />
+                  <Input
+                    {...field}
+                    type="tel"
+                    placeholder="Enter Phone Number"
+                  />
                 </FormControl>
               )}
             </Field>
 
-            <Field name="stage_name">
+            <Field name="stage">
               {({ field }) => (
-                <FormControl>
+                <FormControl mb={4}>
                   <FormLabel>Lead Stage</FormLabel>
                   <Select
                     {...field}
                     placeholder="Select a Stage"
-                    value={values.stage_name}
                     onChange={(e) => setFieldValue("stage", e.target.value)}
                   >
                     <option value="New Lead">New Lead</option>
                     <option value="Qualifying">Qualifying</option>
                     <option value="Negotiating">Negotiating</option>
                     <option value="Proposal">Proposal</option>
-                    <option value="New Lead">New Lead</option>
                     <option value="Won">Won</option>
                     <option value="Lost">Lost</option>
                     <option value="Disqualified">Disqualified</option>
@@ -110,21 +123,20 @@ function LeadForm({ onAddLead }) {
 
             <Field name="notes">
               {({ field }) => (
-                <FormControl>
+                <FormControl mb={4}>
                   <FormLabel>Notes</FormLabel>
-                  <Input {...field} />
+                  <Input {...field} placeholder="Enter Notes" />
                 </FormControl>
               )}
             </Field>
 
-            <Field name="type_names">
+            <Field name="lead_type">
               {({ field }) => (
-                <FormControl>
+                <FormControl mb={4}>
                   <FormLabel>Lead Type</FormLabel>
                   <Select
                     {...field}
                     placeholder="Select a Lead Type"
-                    value={values.type_names}
                     onChange={(e) => setFieldValue("lead_type", e.target.value)}
                   >
                     <option value="Google">Google</option>
@@ -141,9 +153,15 @@ function LeadForm({ onAddLead }) {
               )}
             </Field>
 
-            <Button type="submit" colorScheme="blue" mt="4">
-              Add Lead
-            </Button>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Button type="submit" colorScheme="blue" mt={4}>
+                Add Lead
+              </Button>
+            </motion.div>
           </Form>
         )}
       </Formik>

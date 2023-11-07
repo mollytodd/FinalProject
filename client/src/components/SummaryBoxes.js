@@ -41,7 +41,7 @@ const SummaryBoxes = ({ totalLeads, totalWonLeads, totalLostLeads }) => {
   };
 
   const gradientBackgroundRed = {
-    background: "linear-gradient(white)", // Gradient background for "Lost"
+    background: "linear-gradient(white, grey)", // Gradient background for "Lost"
   };
 
   return (

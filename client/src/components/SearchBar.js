@@ -52,7 +52,7 @@ const SearchBar = ({ leads, setFilteredLeads }) => {
       <InputGroup>
         <Input
           type="text"
-          placeholder="Search by Name, Lead Type, or Stage"
+          placeholder="Filter..."
           value={searchText}
           onChange={handleInputChange}
           onKeyPress={handleKeyPress}
@@ -60,9 +60,7 @@ const SearchBar = ({ leads, setFilteredLeads }) => {
           style={{ width: "100%" }}
         />
         <InputRightElement width="4.5rem"></InputRightElement>
-        <Button h="2rem" size="lg" onClick={handleSearch}>
-          Search
-        </Button>
+    
       </InputGroup>
     </Flex>
   );

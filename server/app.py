@@ -85,12 +85,12 @@ class Leads(Resource):
         formatted_leads = [
             {
                 "lead_id": lead.id,
-                "lead_name": lead.name,
-                "email": lead.email,
-                "phone_number": lead.phone_number,
-                "notes": lead.notes,
-                "lead_type": lead.lead_type_name,
-                "stage": lead.lead_stage_name,
+                "lead_name": lead.name or None,
+                "email": lead.email or None,
+                "phone_number": lead.phone_number or None,
+                "notes": lead.notes or None,
+                "lead_type": lead.lead_type_name or None,
+                "stage": lead.lead_stage_name or None,
                 
             }
             for lead in leads
@@ -178,13 +178,13 @@ class EditLead(Resource):
 
         # Update lead information
         if "lead_name" in data:
-            lead.lead_name = data["lead_name"]  # Use "lead_name" instead of "name"
+            lead.lead_name = data.get("lead_name")  # Use "lead_name" instead of "name"
         if "email" in data:
-            lead.email = data["email"]
+            lead.email = data.get("email")
         if "phone_number" in data:
-            lead.phone_number = data["phone_number"]
+            lead.phone_number = data.get("phone_number")
         if "notes" in data:
-            lead.notes = data["notes"]
+            lead.notes = data.get("notes")
 
         # Find the stage by name and update it
         stage_name = data.get("stage")
@@ -208,6 +208,7 @@ class EditLead(Resource):
         return {"message": "Lead updated successfully"}, 200
 
 api.add_resource(EditLead, "/leads/<int:lead_id>")
+
 
 
 
@@ -327,4 +328,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
-

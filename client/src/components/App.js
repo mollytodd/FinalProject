@@ -11,7 +11,7 @@ import Home from "./Home";
 // import Sidebar from "./Sidebar";
 import { AuthProvider } from "./AuthContext";
 import LeadsTable from "./LeadsTable";
-
+import AddLeadPage from "./AddLeadPage";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -76,6 +76,9 @@ function App() {
             </Route>
             <Route path="/leads">
               <LeadsTable />
+            </Route>
+            <Route path="/add-lead">
+              <AddLeadPage />
             </Route>
             <Redirect from="/" to="/login" />
           </Switch>
