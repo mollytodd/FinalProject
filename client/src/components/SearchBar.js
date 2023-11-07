@@ -9,26 +9,26 @@ import {
 
 const SearchBar = ({ leads, setFilteredLeads }) => {
   const [searchText, setSearchText] = useState("");
-const handleSearch = () => {
-  const filteredLeads = leads.filter((lead) => {
-    return (
-      (typeof lead.lead_name === "string" &&
-        lead.lead_name.toLowerCase().includes(searchText.toLowerCase())) ||
-      (
-        (Array.isArray(lead.lead_type)
-          ? lead.lead_type.join(" ")
-          : lead.lead_type) || ""
-      )
-        .toString()
-        .toLowerCase()
-        .includes(searchText.toLowerCase()) ||
-      (typeof lead.stage === "string" &&
-        lead.stage.toLowerCase().includes(searchText.toLowerCase()))
-    );
-  });
+  const handleSearch = () => {
+    const filteredLeads = leads.filter((lead) => {
+      return (
+        (typeof lead.lead_name === "string" &&
+          lead.lead_name.toLowerCase().includes(searchText.toLowerCase())) ||
+        (
+          (Array.isArray(lead.lead_type)
+            ? lead.lead_type.join(" ")
+            : lead.lead_type) || ""
+        )
+          .toString()
+          .toLowerCase()
+          .includes(searchText.toLowerCase()) ||
+        (typeof lead.stage === "string" &&
+          lead.stage.toLowerCase().includes(searchText.toLowerCase()))
+      );
+    });
 
-  setFilteredLeads(filteredLeads);
-};
+    setFilteredLeads(filteredLeads);
+  };
 
   const handleInputChange = (e) => {
     setSearchText(e.target.value);
@@ -41,7 +41,14 @@ const handleSearch = () => {
   };
 
   return (
-    <Flex alignItems="center">
+    <Flex
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="flex-end" // Align the search bar to the right
+      p={2} // Adjust padding as needed
+      maxW="lg" // Set the maximum width
+      mx="auto" // Center horizontally
+    >
       <InputGroup>
         <Input
           type="text"
@@ -49,12 +56,13 @@ const handleSearch = () => {
           value={searchText}
           onChange={handleInputChange}
           onKeyPress={handleKeyPress}
+          size="lg" // Adjust the size
+          style={{ width: "100%" }}
         />
-        <InputRightElement width="4.5rem">
-          <Button h="1.75rem" size="sm" onClick={handleSearch}>
-            Search
-          </Button>
-        </InputRightElement>
+        <InputRightElement width="4.5rem"></InputRightElement>
+        <Button h="2rem" size="lg" onClick={handleSearch}>
+          Search
+        </Button>
       </InputGroup>
     </Flex>
   );

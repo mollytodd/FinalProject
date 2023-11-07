@@ -28,10 +28,7 @@ const EditLeadForm = ({
   
 
   const handleEditClick = () => {
-      console.log("Edit button clicked");
-      console.log("isEditing:", isEditing);
-      console.log("isEditModalOpen:", isEditModalOpen);
-    setIsEditing(true);
+   
     setIsEditModalOpen(true);
   };
 
