@@ -51,6 +51,14 @@ function EditLeadModal({ isOpen, onClose, lead, onSaveEdit }) {
             />
           </FormControl>
           <FormControl>
+            <FormLabel>Email</FormLabel>
+            <Input
+              name="email" // New field for email
+              value={editedLead.email} // Make sure you have this field in your 'editedLead' object
+              onChange={handleInputChange}
+            />
+          </FormControl>
+          <FormControl>
             <FormLabel>Lead Type</FormLabel>
             <Input
               name="lead_type"

@@ -201,6 +201,7 @@ const LeadsTable = ({ handleSubmit }) => {
             <Tr>
               <Th>NAME</Th>
               <Th>Phone Number</Th>
+              <Th>Email</Th>
               <Th>Lead Type</Th>
               <Th>Stage</Th>
               <Th>Notes</Th>
@@ -212,6 +213,7 @@ const LeadsTable = ({ handleSubmit }) => {
               <Tr key={lead.lead_id}>
                 <Td>{lead.lead_name}</Td>
                 <Td>{lead.phone_number}</Td>
+                <Td>{lead.email}</Td>
                 <Td>{lead.lead_type}</Td>
                 <Td>{lead.stage}</Td>
                 <Td>{lead.notes}</Td>
