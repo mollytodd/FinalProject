@@ -7,7 +7,7 @@ import BarChart from "./BarChart";
 // import ScatterPlot from "./ScatterPlot";
 import SummaryBoxes from "./SummaryBoxes";
 import Loading from "./Loading";
-import TodoDropdown from "./TodoDropdown";
+import TopLeadSources from "./TopLeadSources";
 import HomeHeader from "./HomeHeader";
 
 import { useAuth } from "./AuthContext"; 
@@ -73,9 +73,10 @@ function Home({
                 // Remove border style
               >
                 <Text align="center" fontSize="lg" fontWeight="light" mb={4}>
-                  Lead type 
+                  Lead type
                 </Text>
                 <PieChart />
+                {/* <TopLeadSources leadTypeData={leadTypeData} /> */}
               </Box>
               <Box
                 p={4}
