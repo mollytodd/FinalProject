@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Chart } from "chart.js/auto";
 
-const PieChart = () => {
+const PieChart = ({ setTopSources }) => {
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
   const [leadTypes, setLeadTypes] = useState([]);
@@ -122,6 +122,40 @@ const PieChart = () => {
     }
   }, [dataFetched, leadTypes, counts]);
 
+  useEffect(() => {
+    // Check if the chart data is available
+    if (dataFetched && chartInstanceRef.current) {
+      const chart = chartInstanceRef.current;
+
+      // Access the data of the chart
+      const chartData = chart.data.datasets[0].data;
+
+      // Calculate the total number of leads
+      const totalLeads = chartData.reduce((a, b) => a + b, 0);
+
+      // Calculate the percentages for each lead type
+      const percentages = chartData.map((count) =>
+        ((count / totalLeads) * 100).toFixed(2)
+      );
+
+      // Create an array of objects to store lead types and their percentages
+      const leadSourceData = leadTypes.map((leadType, index) => ({
+        leadType,
+        percentage: parseFloat(percentages[index]),
+      }));
+
+      // Sort the lead sources by percentage in descending order
+      leadSourceData.sort((a, b) => b.percentage - a.percentage);
+
+      // Extract the top 3 lead sources
+      const topSources = leadSourceData.slice(0, 3);
+      setTopSources(topSources); // Use props.setTopSources to update the state in Home
+
+      // Now you can do whatever you want with the topThreeLeadSources
+      console.log("Top Three Lead Sources:", topSources);
+    }
+  }, [dataFetched, leadTypes]);
+
   return (
     <div>
       {dataFetched ? (
@@ -129,9 +163,9 @@ const PieChart = () => {
       ) : (
         <p>Loading data...</p>
       )}
-   
     </div>
   );
 };
+
 
 export default PieChart;

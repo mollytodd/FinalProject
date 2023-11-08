@@ -21,9 +21,12 @@ function Home({
   totalWonLeads,
   totalLostLeads,
   totalLeads,
+
 }) {
   const { setUser } = useAuth(); // Access setUser method
   const [loading, setLoading] = useState(true);
+   const [topSources, setTopSources] = useState([]);
+
 
   useEffect(() => {
     // Simulate a delay before rendering the Home component
@@ -47,11 +50,11 @@ function Home({
             top="1rem"
             right="1rem"
             color="white"
-            bg="blue.500"
+            bg="black"
             zIndex={1}
             href="#"
             _hover={{
-              bg: "blue.500",
+              bg: "black",
             }}
           >
             <Logout setUser={setUser} />
@@ -72,21 +75,26 @@ function Home({
                 borderRadius="lg"
                 // Remove border style
               >
-                <Text align="center" fontSize="lg" fontWeight="light" mb={4}>
-                  Lead type
-                </Text>
-                <PieChart />
-                {/* <TopLeadSources leadTypeData={leadTypeData} /> */}
+             
+                <PieChart setTopSources={setTopSources} />
+        
               </Box>
+              <Box p={4} bgColor="white" borderRadius="lg">
+              
+                {topSources ? (
+                  <TopLeadSources topSources={topSources} />
+                ) : (
+                  <p>No lead sources data available.</p>
+                )}
+              </Box>
+
               <Box
                 p={4}
                 bgColor="white"
                 borderRadius="lg"
                 // Remove border style
               >
-                <Text align="center" fontSize="lg" fontWeight="light" mb={4}>
-                  Lead stage
-                </Text>
+               
                 <BarChart />
               </Box>
             </Flex>

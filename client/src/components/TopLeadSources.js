@@ -1,27 +1,27 @@
 import React from "react";
+import { Box, Text, VStack, Badge, Icon } from "@chakra-ui/react";
+import { AiFillStar } from "react-icons/ai"; // Import an icon from the desired icon library
 
-const TopLeadSources = ({ leadTypeData }) => {
-  // Sort the lead types by percentage in descending order
-  const sortedLeadTypes = leadTypeData.sort(
-    (a, b) => b.percentage - a.percentage
-  );
-
-  // Get the top three lead types
-  const topThreeLeadTypes = sortedLeadTypes.slice(0, 3);
-
+const TopLeadSources = ({ topSources }) => {
   return (
-    <div>
-      <h2>Your Top 3 Lead Sources</h2>
-      <div className="top-sources">
-        {topThreeLeadTypes.map((leadType, index) => (
-          <div key={leadType.id} className="source">
-            <img src={leadType.image} alt={leadType.name} />
-            <p>{leadType.name}</p>
-            <p>{leadType.percentage}%</p>
-          </div>
+    <Box p={4}>
+      <Text fontSize="xl" fontWeight="bold" mb={4}>
+        Your Top 3 Lead Sources:
+      </Text>
+      <VStack spacing={4} align="start">
+        {topSources.map((source, index) => (
+          <Badge
+            key={index}
+            colorScheme="teal"
+            fontSize="lg" // Customize the badge text size
+            display="flex"
+            alignItems="center"
+          >
+            <Icon as={AiFillStar} mr={2} /> {source.leadType}
+          </Badge>
         ))}
-      </div>
-    </div>
+      </VStack>
+    </Box>
   );
 };
 
