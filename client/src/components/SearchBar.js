@@ -9,6 +9,7 @@ import {
 
 const SearchBar = ({ leads, setFilteredLeads }) => {
   const [searchText, setSearchText] = useState("");
+  
   const handleSearch = () => {
     const filteredLeads = leads.filter((lead) => {
       return (

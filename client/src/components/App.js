@@ -12,6 +12,7 @@ import Home from "./Home";
 import { AuthProvider } from "./AuthContext";
 import LeadsTable from "./LeadsTable";
 import AddLeadPage from "./AddLeadPage";
+import Notifications from "./Notifications";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -82,6 +83,7 @@ function App() {
             <Route path="/add-lead">
               <AddLeadPage />
             </Route>
+            {/* <Route path="/notifications" component={Notifications} /> */}
             <Redirect from="/" to="/login" />
           </Switch>
         </Router>
