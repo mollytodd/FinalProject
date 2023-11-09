@@ -23,12 +23,14 @@ function Home({
   totalLostLeads,
   totalLeads,
   newLeadsCount,
+
 }) {
   const { setUser } = useAuth(); // Access setUser method
   const [loading, setLoading] = useState(true);
   const [topSources, setTopSources] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [newLeads, setNewLeads] = useState([]);
+  const [filteredLeads, setFilteredLeads] = useState([]);
 
    useEffect(() => {
      // Fetch new leads data from your API
@@ -91,7 +93,10 @@ function Home({
                 borderRadius="lg"
                 // Remove border style
               >
-                <PieChart setTopSources={setTopSources} />
+                <PieChart
+                  setTopSources={setTopSources}
+                  setFilteredLeads={setFilteredLeads}
+                />
               </Box>
               <Box p={4} bgColor="white" borderRadius="lg">
                 {topSources ? (

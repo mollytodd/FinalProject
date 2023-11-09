@@ -1,13 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Chart } from "chart.js/auto";
+import { useHistory } from "react-router-dom";
 
-const PieChart = ({ setTopSources }) => {
+const PieChart = ({ setTopSources, setFilteredLeads }) => {
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
   const [leadTypes, setLeadTypes] = useState([]);
   const [counts, setCounts] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
+  
 
+  const history = useHistory();
   // Function to generate unique colors
   const generateUniqueColors = (count) => {
     const uniqueColors = [];
@@ -33,6 +36,7 @@ const PieChart = ({ setTopSources }) => {
         const index = elements[0].index;
         if (index >= 0 && index < leadTypes.length) {
           const leadTypeClicked = leadTypes[index];
+          history.push(`/leads/${leadTypeClicked}`);
           // Construct the API URL for fetching leads by type
           const apiUrl = `http://localhost:5555/leads/type/${leadTypeClicked}`;
 
@@ -46,7 +50,7 @@ const PieChart = ({ setTopSources }) => {
             })
             .then((data) => {
               // Handle the response and display the leads associated with the clicked lead type
-              console.log(`Leads of type ${leadTypeClicked}:`, data);
+              setFilteredLeads(data);
             })
             .catch((error) => {
               console.error("Error fetching lead data:", error);
