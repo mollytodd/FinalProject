@@ -16,15 +16,64 @@ import {
 function EditLeadModal({ isOpen, onClose, lead, onSaveEdit }) {
   const [editedLead, setEditedLead] = useState({ ...lead });
 
+  function getIdFromName(name) {
+    const idMap = {
+      Won: 1,
+      Lost: 2,
+      Qualifying: 3,
+      Negotiating: 4,
+      "On Hold": 5,
+      Proposal: 6,
+      "New Lead": 7,
+      Disqualified: 8,
+    };
+
+    return idMap[name];
+  }
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditedLead((prevLead) => ({ ...prevLead, [name]: value }));
+    setEditedLead((prevLead) => ({
+      ...prevLead,
+      [name]: name === "lead_type" ? [value] : value,
+    }));
   };
 
-  const handleSave = () => {
-    // Call the onSaveEdit function to save the edited lead
-    onSaveEdit(editedLead);
-    onClose();
+  const handleSave = async () => {
+    const leadStageId = getIdFromName(editedLead.stage);
+    const updatedLead = { ...editedLead, stage: leadStageId };
+    delete updatedLead.lead_type;
+
+    const leadData = JSON.stringify(updatedLead);
+
+    // Define the base URL and path separately
+
+
+    try {
+      const response = await fetch(`/leads/${updatedLead.lead_id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: leadData,
+      });
+
+      console.log("Response:", response);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error Response:", errorText);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Data:", data);
+
+      onSaveEdit(data);
+      onClose();
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -49,23 +98,15 @@ function EditLeadModal({ isOpen, onClose, lead, onSaveEdit }) {
               value={editedLead.phone_number}
               onChange={handleInputChange}
             />
-          </FormControl>
-          <FormControl>
+            {/* Additional field for email */}
             <FormLabel>Email</FormLabel>
             <Input
-              name="email" // New field for email
-              value={editedLead.email} // Make sure you have this field in your 'editedLead' object
+              name="email"
+              value={editedLead.email}
               onChange={handleInputChange}
             />
           </FormControl>
-          <FormControl>
-            <FormLabel>Lead Type</FormLabel>
-            <Input
-              name="lead_type"
-              value={editedLead.lead_type}
-              onChange={handleInputChange}
-            />
-          </FormControl>
+          <FormControl></FormControl>
           <FormControl>
             <FormLabel>Stage</FormLabel>
             <Input

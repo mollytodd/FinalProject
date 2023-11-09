@@ -44,13 +44,16 @@ const LeadsTable = ({ leads, setLeads, filteredLeads, setFilteredLeads }) => {
     XLSX.writeFile(wb, "leads.xlsx"); // Trigger the download
   };
 
-  const handleEdit = (leadId) => {
-    const leadToEdit = leads.find((lead) => lead.lead_id === leadId);
+ const handleEdit = (leadId) => {
+   const leadToEdit = leads.find((lead) => lead.lead_id === leadId);
 
-    setEditingLead(leadToEdit);
-    setIsEditing(true);
-  };
-
+   if (leadToEdit) {
+     setEditingLead(leadToEdit);
+     setIsEditing(true);
+   } else {
+     console.error(`Lead with ID ${leadId} not found.`);
+   }
+ };
   const handleSaveEdit = (editedLeadData) => {
     const updatedLeads = leads.map((lead) => {
       if (lead.lead_id === editedLeadData.lead_id) {

@@ -103,13 +103,13 @@ api.add_resource(Leads, "/leads")
 
 class LeadById(Resource):
     def get(self, lead_id):
-        # Retrieve the lead by its ID
+        
         lead = Lead.query.get(lead_id)
 
         if lead is None:
             return {"error": "Lead not found"}, 404
 
-        # Format the lead data
+        
         formatted_lead = {
             "lead_id": lead.id,
             "lead_name": lead.name,
@@ -128,45 +128,43 @@ class LeadById(Resource):
         if lead is None:
             return {"error": "Lead not found"}, 404
 
-        # Remove the lead from the session
+      
         db.session.delete(lead)
         db.session.commit()
 
         return {"message": "Lead deleted successfully"}, 200
     
     def patch(self, lead_id):
-        # Retrieve the lead by its ID
         lead = Lead.query.get(lead_id)
-
         if lead is None:
             return {"error": "Lead not found"}, 404
 
-        # Update fields based on the request data
         data = request.get_json()
 
-        for key, value in data.items():
-   # Check if the attribute is an instance of SQLAlchemy model
-            if hasattr(lead, key) and isinstance(getattr(lead, key), db.Model):
-       # If it's a relationship, set the relationship using the provided IDs
-                related_model = type(getattr(lead, key))
-                if key == 'lead_types':
-                    lead.lead_types = []
-                    lead.lead_types = [db.session.query(related_model).get(id) for id in value]
-                else:
-                    setattr(lead, key, [db.session.query(related_model).get(id) for id in value])
-        else:
-       # If the key is 'lead_name', set the 'name' attribute instead
-            if key == 'lead_name':
-                setattr(lead, 'name', value)
-            else:
-           # Otherwise, set the value directly
-                 setattr(lead, key, value)
+        # Handle specific fields
+        if 'lead_name' in data:
+            setattr(lead, 'name', data['lead_name'])
 
+        if 'email' in data:
+            setattr(lead, 'email', data['email'])
 
-        # Commit the changes to the database
+        if 'phone_number' in data:
+            setattr(lead, 'phone_number', data['phone_number'])
+
+        if 'notes' in data:
+            setattr(lead, 'notes', data['notes'])
+
+        # Handle lead_type directly (assuming it's an integer)
+        if 'lead_type' in data:
+            setattr(lead, 'lead_type', data['lead_type'])
+
+        # Handle stage directly (assuming it's an integer)
+        if 'stage' in data:
+            setattr(lead, 'stage_id', data['stage'])
+
+        # Commit changes
         db.session.commit()
 
-        # Format and return the updated lead data
         formatted_lead = {
             "lead_id": lead.id,
             "lead_name": lead.name,
@@ -178,6 +176,7 @@ class LeadById(Resource):
         }
 
         return make_response(formatted_lead, 200)
+
 
 
 api.add_resource(LeadById, "/leads/<int:lead_id>")
