@@ -177,7 +177,7 @@ const Login = () => {
                 ✅
               </span>
               <span style={{ marginLeft: "8px" }}>
-                Customizable to-do lists and reminders to call leads
+                In App reminders for New Leads
               </span>
             </Flex>
             <Flex alignItems="center" style={{ marginLeft: "20px" }}>
@@ -185,7 +185,7 @@ const Login = () => {
                 ✅
               </span>
               <span style={{ marginLeft: "8px" }}>
-                A better way to close business
+                Exportable Data
               </span>
             </Flex>
           </Stack>
