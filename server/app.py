@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-
+from flask_restful import Resource, reqparse
+from flask import current_app
 from flask_cors import CORS
 from flask import Flask
 from flask import request, make_response, session, abort
@@ -132,6 +133,51 @@ class LeadById(Resource):
         db.session.commit()
 
         return {"message": "Lead deleted successfully"}, 200
+    
+    def patch(self, lead_id):
+        # Retrieve the lead by its ID
+        lead = Lead.query.get(lead_id)
+
+        if lead is None:
+            return {"error": "Lead not found"}, 404
+
+        # Update fields based on the request data
+        data = request.get_json()
+
+        for key, value in data.items():
+   # Check if the attribute is an instance of SQLAlchemy model
+            if hasattr(lead, key) and isinstance(getattr(lead, key), db.Model):
+       # If it's a relationship, set the relationship using the provided IDs
+                related_model = type(getattr(lead, key))
+                if key == 'lead_types':
+                    lead.lead_types = []
+                    lead.lead_types = [db.session.query(related_model).get(id) for id in value]
+                else:
+                    setattr(lead, key, [db.session.query(related_model).get(id) for id in value])
+        else:
+       # If the key is 'lead_name', set the 'name' attribute instead
+            if key == 'lead_name':
+                setattr(lead, 'name', value)
+            else:
+           # Otherwise, set the value directly
+                 setattr(lead, key, value)
+
+
+        # Commit the changes to the database
+        db.session.commit()
+
+        # Format and return the updated lead data
+        formatted_lead = {
+            "lead_id": lead.id,
+            "lead_name": lead.name,
+            "email": lead.email,
+            "phone_number": lead.phone_number,
+            "notes": lead.notes,
+            "lead_type": lead.lead_type_name,
+            "stage": lead.lead_stage_name,
+        }
+
+        return make_response(formatted_lead, 200)
 
 
 api.add_resource(LeadById, "/leads/<int:lead_id>")
@@ -167,48 +213,6 @@ class AddLead(Resource):
         return {"message": "Lead added successfully"}, 201
 
 api.add_resource(AddLead, "/leads")
-
-class EditLead(Resource):
-    def patch(self, lead_id):
-        data = request.get_json()
-        lead = Lead.query.get(lead_id)
-
-        if lead is None:
-            return {"error": "Lead not found"}, 404
-
-        # Update lead information
-        if "lead_name" in data:
-            lead.lead_name = data.get("lead_name")  # Use "lead_name" instead of "name"
-        if "email" in data:
-            lead.email = data.get("email")
-        if "phone_number" in data:
-            lead.phone_number = data.get("phone_number")
-        if "notes" in data:
-            lead.notes = data.get("notes")
-
-        # Find the stage by name and update it
-        stage_name = data.get("stage")
-        if stage_name:
-            stage = Stage.query.filter_by(name=stage_name).first()
-            if stage:
-                lead.stage = stage
-            else:
-                return {"error": "Stage not found"}, 404
-
-        # Find the types by name and update them
-        type_names = data.get("lead_type", [])
-        lead.lead_types.clear()
-        for type_name in type_names:
-            lead_type = Type.query.filter_by(name=type_name).first()
-            if lead_type:
-                lead.lead_types.append(lead_type)
-
-        db.session.commit()
-
-        return {"message": "Lead updated successfully"}, 200
-
-api.add_resource(EditLead, "/leads/<int:lead_id>")
-
 
 
 
