@@ -5,7 +5,7 @@ import {
   BrowserRouter as Router,
   Redirect,
 } from "react-router-dom";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import Login from "./Login";
 import Home from "./Home";
 // import Sidebar from "./Sidebar";
@@ -13,6 +13,17 @@ import { AuthProvider } from "./AuthContext";
 import LeadsTable from "./LeadsTable";
 import AddLeadPage from "./AddLeadPage";
 import Notifications from "./Notifications";
+
+const theme = extendTheme({
+  styles: {
+    global: {
+      body: {
+        bg: "gray.100", // Background color
+        color: "gray.800", // Text color
+      },
+    },
+  },
+});
 
 function App() {
   const [user, setUser] = useState(null);
@@ -64,7 +75,7 @@ function App() {
 
   return (
     <AuthProvider>
-      <ChakraProvider>
+      <ChakraProvider theme={theme}>
         <Router>
           <Switch>
             <Route path="/login">

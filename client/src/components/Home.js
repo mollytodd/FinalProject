@@ -72,11 +72,11 @@ function Home({
             top="1rem"
             right="1rem"
             color="white"
-            bg="black"
+            bg="twitter.500" // Use Twitter blue color
             zIndex={1}
             href="#"
             _hover={{
-              bg: "black",
+              bg: "twitter.600", // Adjust the hover color if needed
             }}
           >
             <Logout setUser={setUser} />
@@ -97,6 +97,8 @@ function Home({
                 bgColor="white"
                 borderRadius="lg"
                 textAlign="center"
+                margin="0 30px 0 0"
+                boxShadow="0 4px 8px rgba(0, 0, 0, 0.6)"
                 // Remove border style
               >
                 <Text fontWeight="bold" fontSize="lg" mb={2}>
@@ -109,7 +111,14 @@ function Home({
                 />
               </Box>
 
-              <Box p={4} bgColor="white" borderRadius="lg">
+              <Box
+                p={4}
+                bgColor="white"
+                borderRadius="lg"
+                border="1px solid gray.300"
+                boxShadow="0 4px 8px rgba(0, 0, 0, 0.6)"
+                margin="0 30px 0 0"
+              >
                 {topSources ? (
                   <TopLeadSources topSources={topSources} />
                 ) : (
@@ -117,7 +126,14 @@ function Home({
                 )}
               </Box>
               {/* Add BottomLeadSources component here */}
-              <Box p={4} bgColor="white" borderRadius="lg">
+              <Box
+                p={4}
+                bgColor="white"
+                borderRadius="lg"
+                border="1px solid gray.300"
+                boxShadow="0 4px 8px rgba(0, 0, 0, 0.6)"
+                margin="0 30px 0 0"
+              >
                 {bottomSources ? (
                   <BottomLeadSources bottomSources={bottomSources} />
                 ) : (
@@ -131,6 +147,9 @@ function Home({
                 borderRadius="lg"
                 // Remove border style
                 textAlign="center"
+                border="1px solid gray.300"
+                boxShadow="0 4px 8px rgba(0, 0, 0, 0.6)"
+
                 // Remove border style
               >
                 <Text fontWeight="bold" fontSize="lg" mb={2}>

@@ -11,7 +11,7 @@ const TipOfTheDay = ({ topSources, bottomSources }) => {
 
       return (
         <Box
-          bgColor="yellow"
+          bgGradient="linear(to-r, yellow, white)"
           p={4}
           borderRadius="xl" // Increase the border radius for more round edges
           mt={4}
@@ -28,8 +28,8 @@ const TipOfTheDay = ({ topSources, bottomSources }) => {
             Tip of the Day:
           </Text>
           <Text>
-            Consider decreasing your <strong>{bottomSource}</strong> spending and 
-            investing more into <strong>{topSource}</strong>.
+            Consider decreasing your <strong>{bottomSource}</strong> spending
+            and investing more into <strong>{topSource}</strong>.
           </Text>
         </Box>
       );
