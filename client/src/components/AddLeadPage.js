@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import LeadForm from "./LeadForm";
 import { Image, Box, Flex, Button } from "@chakra-ui/react";
 
-function AddLeadPage() {
+function AddLeadPage({onAddLead}) {
   const history = useHistory();
 
   const navigateToHome = () => {
@@ -37,7 +37,7 @@ function AddLeadPage() {
           maxH="600px"
           mx="auto"
         />
-        <LeadForm />
+        <LeadForm onAddLead={onAddLead} />
       </Flex>
     </Box>
   );

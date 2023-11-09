@@ -21,6 +21,7 @@ function App() {
   const [totalLostLeads, setTotalLostLeads] = useState(0);
   const [topSources, setTopSources] = useState([]); 
   const [filteredLeads, setFilteredLeads] = useState([]);
+  const [leads, setLeads] = useState([]);
 
   useEffect(() => {
     // Fetch your lead data and calculate the values
@@ -80,10 +81,22 @@ function App() {
               />
             </Route>
             <Route path="/leads">
-              <LeadsTable leads={filteredLeads} />
+              <LeadsTable
+                leads={leads}
+                setLeads={setLeads}
+                filteredLeads={filteredLeads}
+                setFilteredLeads={setFilteredLeads}
+              />
             </Route>
+            <Route
+              path="/leads/:leadType"
+              render={(props) => (
+                <LeadsTable {...props} leads={leads} setLeads={setLeads} />
+              )}
+            />
+
             <Route path="/add-lead">
-              <AddLeadPage />
+              <AddLeadPage  />
             </Route>
             {/* <Route path="/notifications" component={Notifications} /> */}
             <Redirect from="/" to="/login" />

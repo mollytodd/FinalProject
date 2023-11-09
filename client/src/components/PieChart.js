@@ -36,25 +36,8 @@ const PieChart = ({ setTopSources, setFilteredLeads }) => {
         const index = elements[0].index;
         if (index >= 0 && index < leadTypes.length) {
           const leadTypeClicked = leadTypes[index];
+          console.log("leadTypeClicked:", leadTypeClicked);
           history.push(`/leads/${leadTypeClicked}`);
-          // Construct the API URL for fetching leads by type
-          const apiUrl = `http://localhost:5555/leads/type/${leadTypeClicked}`;
-
-          // Fetch leads by type and display them
-          fetch(apiUrl)
-            .then((response) => {
-              if (!response.ok) {
-                throw Error("Network response was not ok");
-              }
-              return response.json();
-            })
-            .then((data) => {
-              // Handle the response and display the leads associated with the clicked lead type
-              setFilteredLeads(data);
-            })
-            .catch((error) => {
-              console.error("Error fetching lead data:", error);
-            });
         }
       }
     }
