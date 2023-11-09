@@ -1,23 +1,23 @@
 import React from "react";
 import { Box, Text, VStack, Badge, Icon } from "@chakra-ui/react";
-import { AiFillStar } from "react-icons/ai"; // Import an icon from the desired icon library
+import { AiOutlineStar } from "react-icons/ai"; // Import an icon from the desired icon library
 
-const TopLeadSources = ({ topSources }) => {
+const BottomLeadSources = ({ bottomSources }) => {
   return (
     <Box p={4}>
       <Text fontSize="xl" fontWeight="bold" mb={4}>
-        Your Lead Sources:
+        Your Bottom Sources:
       </Text>
       <VStack spacing={4} align="start">
-        {topSources.map((source, index) => (
+        {bottomSources.map((source, index) => (
           <Badge
             key={index}
-            colorScheme="teal"
+            colorScheme="red" // Customize the color for bottom sources
             fontSize="xl" // Customize the badge text size
             display="flex"
             alignItems="center"
           >
-            <Icon as={AiFillStar} mr={2} /> {source.leadType}
+            <Icon as={AiOutlineStar} mr={2} /> {source.leadType}
           </Badge>
         ))}
       </VStack>
@@ -25,4 +25,4 @@ const TopLeadSources = ({ topSources }) => {
   );
 };
 
-export default TopLeadSources;
+export default BottomLeadSources;

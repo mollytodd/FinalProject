@@ -9,7 +9,7 @@ function HomeHeader() {
       alignItems="center"
       height="100px"
       p={4}
-      marginLeft="-900px" // Adjust the margin to move the header further to the left
+      marginLeft="-1100px" // Adjust the margin to move the header further to the left
     >
       <Text fontSize="4xl" fontWeight="light">
         Monitor your lead <br />

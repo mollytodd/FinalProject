@@ -8,9 +8,10 @@ import BarChart from "./BarChart";
 import SummaryBoxes from "./SummaryBoxes";
 import Loading from "./Loading";
 import TopLeadSources from "./TopLeadSources";
+import BottomLeadSources from "./BottomLeadSources";
 import HomeHeader from "./HomeHeader";
 import Notifications from "./Notifications";
-
+import TipOfTheDay from "./TipOfTheDay";
 import { useAuth } from "./AuthContext"; 
 
 
@@ -27,6 +28,7 @@ function Home({
 }) {
   const { setUser } = useAuth(); // Access setUser method
   const [loading, setLoading] = useState(true);
+  const [bottomSources, setBottomSources] = useState([]);
   const [topSources, setTopSources] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [newLeads, setNewLeads] = useState([]);
@@ -38,7 +40,9 @@ function Home({
        .then((response) => response.json())
        .then((data) => {
          setNewLeads(data); // Update the newLeads state
-         setLoading(false);
+         setTimeout(() => {
+           setLoading(false);
+         }, 2000); // Display Loading for at least 2 seconds
        })
        .catch((error) => {
          console.error("Error fetching new leads: ", error);
@@ -78,8 +82,9 @@ function Home({
             <Logout setUser={setUser} />
           </Button>
           <HomeHeader />
+          <TipOfTheDay topSources={topSources} bottomSources={bottomSources} />
 
-          <Box mt={6} marginLeft="-250px">
+          <Box mt={6} marginLeft="px">
             {/* <TodoDropdown /> */}
             <SummaryBoxes
               totalLeads={totalLeads}
@@ -91,18 +96,32 @@ function Home({
                 p={4}
                 bgColor="white"
                 borderRadius="lg"
+                textAlign="center"
                 // Remove border style
               >
+                <Text fontWeight="bold" fontSize="lg" mb={2}>
+                  Type Breakdown
+                </Text>
                 <PieChart
                   setTopSources={setTopSources}
+                  setBottomSources={setBottomSources}
                   setFilteredLeads={setFilteredLeads}
                 />
               </Box>
+
               <Box p={4} bgColor="white" borderRadius="lg">
                 {topSources ? (
                   <TopLeadSources topSources={topSources} />
                 ) : (
                   <p>No lead sources data available.</p>
+                )}
+              </Box>
+              {/* Add BottomLeadSources component here */}
+              <Box p={4} bgColor="white" borderRadius="lg">
+                {bottomSources ? (
+                  <BottomLeadSources bottomSources={bottomSources} />
+                ) : (
+                  <p>No bottom lead sources data available.</p>
                 )}
               </Box>
 
@@ -111,7 +130,12 @@ function Home({
                 bgColor="white"
                 borderRadius="lg"
                 // Remove border style
+                textAlign="center"
+                // Remove border style
               >
+                <Text fontWeight="bold" fontSize="lg" mb={2}>
+                  Stage Breakdown
+                </Text>
                 <BarChart />
               </Box>
             </Flex>

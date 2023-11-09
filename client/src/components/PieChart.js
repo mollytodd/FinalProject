@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Chart } from "chart.js/auto";
 import { useHistory } from "react-router-dom";
 
-const PieChart = ({ setTopSources, setFilteredLeads }) => {
+const PieChart = ({ setTopSources,setBottomSources, setFilteredLeads }) => {
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
   const [leadTypes, setLeadTypes] = useState([]);
@@ -103,7 +103,9 @@ const PieChart = ({ setTopSources, setFilteredLeads }) => {
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          onClick: handleChartClick, // Handle click events
+          onClick: handleChartClick,
+          
+           // Handle click events
         },
       });
     }
@@ -136,7 +138,9 @@ const PieChart = ({ setTopSources, setFilteredLeads }) => {
 
       // Extract the top 3 lead sources
       const topSources = leadSourceData.slice(0, 3);
-      setTopSources(topSources); // Use props.setTopSources to update the state in Home
+      const bottomSources = leadSourceData.slice(-2);
+      setTopSources(topSources);
+      setBottomSources(bottomSources); // Use props.setTopSources to update the state in Home
 
       // Now you can do whatever you want with the topThreeLeadSources
       console.log("Top Three Lead Sources:", topSources);

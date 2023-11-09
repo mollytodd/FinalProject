@@ -19,7 +19,8 @@ function App() {
   const [totalLeads, setTotalLeads] = useState(0);
   const [totalWonLeads, setTotalWonLeads] = useState(0);
   const [totalLostLeads, setTotalLostLeads] = useState(0);
-  const [topSources, setTopSources] = useState([]); 
+  const [topSources, setTopSources] = useState([])
+ const [bottomSources, setBottomSources] = useState([]);
   const [filteredLeads, setFilteredLeads] = useState([]);
   const [leads, setLeads] = useState([]);
 
@@ -77,6 +78,7 @@ function App() {
                 totalWonLeads={totalWonLeads}
                 totalLostLeads={totalLostLeads}
                 topSources={topSources}
+                bottomSources={bottomSources}
                 setFilteredLeads={setFilteredLeads}
               />
             </Route>
