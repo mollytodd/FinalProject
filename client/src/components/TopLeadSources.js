@@ -6,7 +6,7 @@ const TopLeadSources = ({ topSources }) => {
   return (
     <Box p={4}>
       <Text fontSize="xl" fontWeight="bold" mb={4}>
-        Your Lead Sources:
+        Your Top Sources:
       </Text>
       <VStack spacing={4} align="start">
         {topSources.map((source, index) => (
