@@ -11,7 +11,7 @@ const TipOfTheDay = ({ topSources, bottomSources }) => {
 
       return (
         <Box
-          bgGradient="linear(to-r, yellow, white)"
+          bgGradient="linear(to-r, , white)"
           p={4}
           borderRadius="xl" // Increase the border radius for more round edges
           mt={4}
