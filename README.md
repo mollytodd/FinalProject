@@ -22,7 +22,7 @@ LeadPulse provides a range of API routes to facilitate various functionalities:
 
 Authentication: Includes routes for login, session checking, and logout.  
 
-Lead Management: (full CRUD) Enables operations such as retrieving, updating, adding, and deleting leads.  
+Lead Management: (full CRUD) Enables operations such as retrieving, updating, adding, and deleting leads.    
 Lead Retrieval: Supports fetching leads by ID or lead type.  
 Frontend Technologies -   
 The frontend of LeadPulse is built using React, chart.js, useContext for state management for the user, and Chakra UI for a sleek user interface.  
