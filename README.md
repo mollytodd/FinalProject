@@ -18,31 +18,31 @@ Backend Features -
 The backend of LeadPulse includes robust data models for users, leads, lead types (stored in a separate table), and stages (also in a separate table). This architecture allows for the flexibility of associating multiple lead types with leads and connecting lead types with multiple users.
 
 API Routes -   
-LeadPulse provides a range of API routes to facilitate various functionalities:
+LeadPulse provides a range of API routes to facilitate various functionalities:  
 
-Authentication: Includes routes for login, session checking, and logout.
+Authentication: Includes routes for login, session checking, and logout.  
 
-Lead Management: (full CRUD) Enables operations such as retrieving, updating, adding, and deleting leads.
-Lead Retrieval: Supports fetching leads by ID or lead type.
-Frontend Technologies - 
-The frontend of LeadPulse is built using React, chart.js, useContext for state management for the user, and Chakra UI for a sleek user interface.
+Lead Management: (full CRUD) Enables operations such as retrieving, updating, adding, and deleting leads.  
+Lead Retrieval: Supports fetching leads by ID or lead type.  
+Frontend Technologies -   
+The frontend of LeadPulse is built using React, chart.js, useContext for state management for the user, and Chakra UI for a sleek user interface.  
 
-User Dashboard- 
+User Dashboard-   
 Upon logging in, users are greeted with a personalized dashboard that leverages Chart.js for dynamic data visualization. The dashboard offers a snapshot of crucial lead statistics, including total leads, won leads, lost leads, lead sources, and lead stages.
 
-Real-time Notifications - 
+Real-time Notifications -   
 LeadPulse keeps users informed with in-app notifications, notifying them promptly when a new lead is added. These notifications are conveniently displayed on the left sidebar.
 
-Interactive Pie Charts - 
+Interactive Pie Charts -   
 Users can interact with the pie charts on the dashboard, clicking on specific segments to navigate directly to corresponding leads. For example, clicking on 'Instagram' redirects the user to a lead page displaying only Instagram-related leads.
 
-Lead Management - 
+Lead Management -   
 Lead addition is streamlined, allowing users to instantly add new leads to the comprehensive leads list. The application facilitates easy filtering and data export directly from the lead page.
 
-Contact Information- 
-For any inquiries or information regarding future releases, feel free to contact the developer:
+Contact Information-   
+For any inquiries or information regarding future releases, feel free to contact the developer:  
 
-Email: mollyjt89@gmail.com
+Email: mollyjt89@gmail.com  
 
 Please do not hesitate to reach out if you have any questions or suggestions. Your feedback is highly valued.
 
