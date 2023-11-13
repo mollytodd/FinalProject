@@ -12,12 +12,12 @@
 
 
 
-LeadPulse is a comprehensive B2B application designed for efficient lead management, encompassing lead tracking, lead sources, and lead stages. The application boasts a full-stack architecture, with the backend crafted using Flask and Python for scripting.
+LeadPulse is a comprehensive B2B application designed for efficient lead management, encompassing lead tracking, lead sources, and lead stages. The application boasts a full-stack architecture, with the backend crafted using Flask and Python for scripting.  
 
-Backend Features - 
+Backend Features -   
 The backend of LeadPulse includes robust data models for users, leads, lead types (stored in a separate table), and stages (also in a separate table). This architecture allows for the flexibility of associating multiple lead types with leads and connecting lead types with multiple users.
 
-API Routes - 
+API Routes -   
 LeadPulse provides a range of API routes to facilitate various functionalities:
 
 Authentication: Includes routes for login, session checking, and logout.
