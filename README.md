@@ -9,7 +9,9 @@
 <img width="1379" alt="image" src="https://github.com/mollytodd/FinalProject/assets/131923397/fd396758-9172-40f6-a458-34127731ff51">
 
 
-LeadPulse Application
+
+
+
 LeadPulse is a comprehensive B2B application designed for efficient lead management, encompassing lead tracking, lead sources, and lead stages. The application boasts a full-stack architecture, with the backend crafted using Flask and Python for scripting.
 
 Backend Features
